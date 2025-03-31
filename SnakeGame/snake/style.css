@@ -1,0 +1,63 @@
+body {
+    margin: 0;
+    font-family: 'Poetsen One', cursive;
+    background: linear-gradient(to bottom, #56c70a, #3CB371); /* Зеленый градиент */
+    background-repeat: repeat;
+    background-size: cover; /* Заполняет весь экран */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh; /* Минимальная высота экрана */
+    color: white;
+    text-align: center;
+}
+
+.container {
+    background-color: rgba(0, 0, 0, 0.5); /* Полупрозрачный фон для контейнера */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.7); /* Тень */
+    width: 80%;
+    max-width: 800px; /* Максимальная ширина контейнера */
+}
+
+h1 {
+    font-size: 3em;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+#gameCanvas {
+    background-color: #000; /* Черный фон для игрового поля */
+    border: 5px solid #fff;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+.controls {
+    margin-top: 20px;
+    padding: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 5px;
+}
+
+.controls h2 {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+}
+
+.controls p {
+    font-size: 1.1em;
+}
+
+/* Адаптивность (базовая) */
+@media (max-width: 600px) {
+    .container {
+        width: 95%;
+        padding: 10px;
+    }
+
+    h1 {
+        font-size: 2.5em;
+    }
+}
