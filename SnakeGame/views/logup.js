@@ -2,14 +2,13 @@ document.getElementById('registrationForm').addEventListener('submit', function(
     event.preventDefault();
 
     const username = document.getElementById('username').value;
-    const email = document.getElementById('email').value;  // Получаем email
+    const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
-    const confirmPassword = document.getElementById('confirmPassword').value; // Получаем подтверждение пароля
+    const confirmPassword = document.getElementById('confirmPassword').value;
 
-    // Проверка совпадения паролей
     if (password !== confirmPassword) {
         document.getElementById('error-message').textContent = 'Пароли не совпадают.';
-        return; // Прерываем выполнение, если пароли не совпадают
+        return;
     }
 
     fetch('http://localhost:5000/auth/registration', {
@@ -17,7 +16,7 @@ document.getElementById('registrationForm').addEventListener('submit', function(
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ username: username, email: email, password: password }) // Отправляем email на сервер
+        body: JSON.stringify({ username: username, email: email, password: password })
     })
     .then(response => {
         if (!response.ok) {

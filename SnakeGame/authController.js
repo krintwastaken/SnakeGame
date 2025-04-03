@@ -41,39 +41,30 @@ class authController {
 
         } catch (err) {
             console.log(err)
-            res.status(400).json({message: 'Registration error'})
+            res.status(400).json({message: 'Ошибка при регистрации'})
         }
     }
 
     async login(req, res) {
         try {
-            const { username, password, mail } = req.body;
+            const { password, email } = req.body;
     
-            // Сначала ищем пользователя по username
-            const user = await User.findOne({ username });
+            const user = await User.findOne({ email });
     
-            // Если пользователь не найден по username, возвращаем ошибку
             if (!user) {
-                return res.status(400).json({ message: `Пользователь ${username} не найден` });
+                return res.status(400).json({ message: `Пользователь с email: ${email} не найден` });
             }
     
-            // Проверяем, совпадает ли указанный email с email пользователя в базе данных
-            if (user.mail !== mail) {
-                return res.status(400).json({ message: `Неверный email для пользователя ${username}` });
-            }
-    
-            // Проверяем пароль
             const validPassword = bcrypt.compareSync(password, user.password);
             if (!validPassword) {
                 return res.status(400).json({ message: `Введен неверный пароль` });
             }
     
             const token = generateAccessToken(user._id, user.roles);
-            return res.json({ token });
-    
+            return res.json({ token, message: "ok" });
         } catch (err) {
-            console.error(err); // Используйте console.error для логирования ошибок
-            res.status(500).json({ message: 'Login error' }); // Изменил на 500, т.к. это ошибка сервера
+            console.error(err);
+            res.status(500).json({ message: 'Login error' });
         }
     }
 
@@ -83,6 +74,28 @@ class authController {
             res.json(users)
         } catch (err) {
             console.log(err)
+        }
+    }
+
+    async reset_password(req, res) {
+        try {
+            const { email, password } = req.body;
+
+            const user = await User.findOne({ email });
+
+            if (!user) {
+                return res.status(400).json({ message: `Пользователь с email: ${email} не найден` });
+            }
+
+            const hashPassword = bcrypt.hashSync(password, 7);
+            user.password = hashPassword;
+            await user.save();
+
+            return res.json({ message: "Пароль успешно изменен" });
+
+        } catch (e) {
+            console.log(e);
+            res.status(400).json({ message: 'Ошибка при смене пароля' });
         }
     }
 }

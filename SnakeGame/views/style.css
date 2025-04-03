@@ -33,7 +33,6 @@ body {
     text-align: left;
 }
 
-/* Стиль для input type="email" */
 .container input[type="email"],
 .container input[type="text"],
 .container input[type="password"] {
@@ -47,7 +46,6 @@ body {
     box-sizing: border-box;
 }
 
-/* Стиль для input type="email" при фокусе */
 .container input[type="email"]:focus,
 .container input[type="text"]:focus,
 .container input[type="password"]:focus {
@@ -117,41 +115,46 @@ h1 {
     }
 }
 
-/* Добавьте в ваш style.css */
 .password-container {
     position: relative;
     display: flex;
     align-items: center;
   }
-  
-  .password-container input {
-    padding-right: 30px; /*  Обеспечиваем место для иконки, чтобы текст не перекрывал ее */
+
+.password-container input {
+    padding-right: 30px;
   }
-  
-  .password-container i {
+
+.password-container i {
     position: absolute;
-    right: 10px; /* Регулируем положение иконки справа */
-    top: 50%; /* Центрируем иконку по вертикали */
-    transform: translateY(-95%); /*  Точно выравниваем по центру, компенсируя высоту иконки */
+    right: 10px;
+    top: 50%;
+    transform: translateY(-95%);
     cursor: pointer;
   }
 
-  .links {
+.links {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     margin-bottom: 20px;
-    text-align: left; /* Выравниваем текст влево */
-    margin-left: 10px; /* Сдвигаем строку немного вправо (опционально) */
-    font-size: 18px; /* Устанавливаем размер шрифта для всего контейнера .links */
-    color: #ffffff; /* Устанавливаем цвет текста для основного текста строки */
+    margin-left: 10px;
+    font-size: 18px;
+    color: #ffffff;
 }
 
-.links a { /* Стили для ссылки "Войти" */
-    text-decoration: none; /* Убирает подчеркивание у ссылки */
+.links a {
+    text-decoration: none;
 }
 
-.links a:hover { /* Стили для ссылки "Войти" при наведении */
-    text-decoration: underline; /* Подчеркивание при наведении (по желанию) */
+.links a:hover {
+    text-decoration: underline;
 }
 
-.login-link { /* Стили, специфичные для "Войти" */
-    color: #FFFF00; /* Желтый цвет для слова "Войти" */
+.link-item a{
+    color: #FFFFFF;
+}
+
+.login-link {
+    color: #FFFF00;
 }

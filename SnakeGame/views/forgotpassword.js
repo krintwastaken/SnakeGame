@@ -2,17 +2,15 @@ document.getElementById('resetPasswordForm').addEventListener('submit', function
     event.preventDefault();
 
     const email = document.getElementById('email').value;
-    const newPassword = document.getElementById('newPassword').value;
+    const newPassword = document.getElementById('password').value;
     const confirmPassword = document.getElementById('confirmPassword').value;
 
-    // Проверяем совпадение нового пароля и его подтверждения
     if (newPassword !== confirmPassword) {
         document.getElementById('error-message').textContent = 'Новый пароль и его подтверждение не совпадают.';
         return;
     }
 
-    // Отправляем запрос на сервер для сброса пароля
-    fetch('http://localhost:5000/auth/reset-password', {
+    fetch('http://localhost:5000/auth/reset_password', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
