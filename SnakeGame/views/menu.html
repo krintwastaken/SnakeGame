@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Змейка - Меню</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Анимации для меню */
+        .menu-container {
+            transform: scale(0.8);
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+        
+        .menu-container.show {
+            transform: scale(1);
+            opacity: 1;
+        }
+        
+        h1 {
+            transform: translateY(20px);
+            opacity: 0;
+            transition: all 0.4s ease 0.2s;
+        }
+        
+        .menu-container.show h1 {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        .menu-button {
+            transform: translateY(20px);
+            opacity: 0;
+            transition: all 0.4s ease;
+            background-color: #56c70a;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.2em;
+            width: 100%;
+            font-family: 'Poetsen One', cursive;
+            margin: 10px 0;
+        }
+        
+        .menu-container.show .menu-button {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        .menu-button:hover {
+            background-color: #3CB371;
+        }
+        
+        #play-button {
+            transition-delay: 0.3s;
+        }
+        
+        #instructions-button {
+            transition-delay: 0.4s;
+        }
+        
+        #shop-button {
+            transition-delay: 0.5s;
+            /* Убрано синее выделение, теперь зеленая как все */
+        }
+        
+        #leaders-button {
+            transition-delay: 0.6s;
+        }
+        
+        #exit-button {
+            transition-delay: 0.7s;
+            background-color: #e74c3c;
+        }
+        
+        #exit-button:hover {
+            background-color: #c0392b;
+        }
+        
+        .error-message {
+            color: #ff4d4d;
+            margin-top: 15px;
+            display: none;
+        }
+        
+        /* Стиль для модального окна */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background-color: #006400;
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            color: white;
+            position: relative;
+            text-align: center;
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 1.5em;
+            cursor: pointer;
+        }
+        
+        .in-dev-message {
+            font-size: 1.5em;
+            margin: 20px 0;
+            color: #f1c40f;
+        }
+    </style>
+</head>
+<body>
+    <div class="container menu-container" id="menu">
+        <h1>Змейка</h1>
+        <button id="play-button" class="menu-button" onclick="startGame()">Играть</button>
+        <button id="instructions-button" class="menu-button" onclick="showInstructions()">Инструкция</button>
+        <button id="shop-button" class="menu-button" onclick="showShop()">Магазин</button>
+        <button id="leaders-button" class="menu-button" onclick="showLeaders()">Таблица лидеров</button>
+        <button id="exit-button" class="menu-button" onclick="exitGame()">Выход</button>
+        <div id="error-message" class="error-message"></div>
+    </div>
+
+    <!-- Модальное окно для инструкции -->
+    <div id="instructions-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('instructions-modal')">&times;</span>
+            <h2>Инструкция к игре "Змейка"</h2>
+            <p>Цель игры - управлять змейкой и собирать яблоки, чтобы увеличивать её длину.</p>
+            <h3>Управление:</h3>
+            <ul>
+                <li><strong>Стрелка вверх</strong> - движение вверх</li>
+                <li><strong>Стрелка вниз</strong> - движение вниз</li>
+                <li><strong>Стрелка влево</strong> - движение влево</li>
+                <li><strong>Стрелка вправо</strong> - движение вправо</li>
+            </ul>
+            <h3>Правила:</h3>
+            <ul>
+                <li>Каждое съеденное яблоко увеличивает длину змейки и даёт 1 очко</li>
+                <li>Не врезайтесь в стены и в собственное тело</li>
+                <li>Чем длиннее змейка, тем сложнее управление</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Модальное окно для магазина -->
+    <div id="shop-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('shop-modal')">&times;</span>
+            <h2>Магазин</h2>
+            <div class="in-dev-message">В разработке</div>
+            <p>Скоро здесь появится магазин с крутыми скинами для змейки!</p>
+        </div>
+    </div>
+
+    <!-- Модальное окно для таблицы лидеров -->
+    <div id="leaders-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('leaders-modal')">&times;</span>
+            <h2>Таблица лидеров</h2>
+            <div class="in-dev-message">В разработке</div>
+            <p>Скоро здесь появится список лучших игроков!</p>
+        </div>
+    </div>
+
+    <script>
+        window.onload = function() {
+            setTimeout(function() {
+                document.getElementById('menu').classList.add('show');
+            }, 100);
+        };
+
+        function startGame() {
+            const playButton = document.getElementById('play-button');
+            const errorElement = document.getElementById('error-message');
+            
+            errorElement.style.display = 'none';
+            errorElement.textContent = '';
+            
+            playButton.textContent = 'Загрузка...';
+            playButton.disabled = true;
+            
+            fetch('../snake/game.html')
+                .then(response => {
+                    if (!response.ok) throw new Error('Файл игры не найден');
+                    
+                    document.getElementById('menu').classList.remove('show');
+                    setTimeout(() => {
+                        window.location.href = "../snake/game.html";
+                    }, 500);
+                })
+                .catch(error => {
+                    errorElement.textContent = error.message;
+                    errorElement.style.display = 'block';
+                    playButton.textContent = 'Играть';
+                    playButton.disabled = false;
+                });
+        }
+
+        function showInstructions() {
+            document.getElementById('instructions-modal').style.display = 'flex';
+        }
+
+        function showShop() {
+            document.getElementById('shop-modal').style.display = 'flex';
+        }
+
+        function showLeaders() {
+            document.getElementById('leaders-modal').style.display = 'flex';
+        }
+
+        function exitGame() {
+            if (confirm('Вы действительно хотите выйти в меню авторизации?')) {
+                window.location.href = "../views/login.html";
+            }
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        // Закрытие модального окна при клике вне его
+        window.onclick = function(event) {
+            if (event.target.className === 'modal') {
+                event.target.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>

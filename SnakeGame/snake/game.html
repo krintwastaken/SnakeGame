@@ -5,17 +5,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Змейка</title>
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
-    <div class="container">
-        <h1>Змейка</h1>
-        <canvas id="gameCanvas"></canvas>
-        <div class="controls">
-            <h2>Управление</h2>
-            <p>Используйте клавиши стрелок для управления змейкой.</p>
+    <div class="top-left-corner">
+        <button id="authButton">
+            <span class="material-icons">arrow_back</span>
+        </button>
+        <div class="slider-container">
+            <div class="volume-icon">
+                <span class="material-icons" id="volumeIcon">volume_up</span>
+            </div>
+            <input type="range" id="volumeSlider" min="0" max="100" value="100">
         </div>
     </div>
+    <div class="container">
+        <!--<h1>Змейка</h1>-->
+        <canvas id="gameCanvas"></canvas>
+        <!--<div class="controls">
+            <p>Используйте клавиши стрелок для управления змейкой.</p>
+        </div>-->
+    </div>
     <script src="snake.js"></script>
+    <script src="game_ui.js"></script>
     <script>
         const canvas = document.getElementById('gameCanvas');
         canvas.width = 600;

@@ -1,3 +1,13 @@
+const font = new FontFace('Poetsen One', 'url(./Fonts/PoetsenOne-Regular.ttf)');
+
+font.load().then(function(loaded_font) {
+  document.fonts.add(loaded_font);
+  console.log('Font loaded');
+  game();
+}).catch(function(error) {
+  console.error('Font loading error:', error);
+});
+
 // Графика
 const head_up_img = new Image();
 head_up_img.src = 'Graphics/head_up.png';
@@ -38,6 +48,13 @@ apple_img.src = 'Graphics/apple.png';
 const crunch_sound = new Audio('Sounds/music_food.mp3');
 const turn_sound = new Audio('Sounds/music_move.mp3');
 const gameover_sound = new Audio('Sounds/music_gameover.mp3');
+
+// Функция для установки громкости
+function setVolume(volume) {
+    crunch_sound.volume = volume;
+    turn_sound.volume = volume;
+    gameover_sound.volume = volume;
+}
 
 const cell_size = 40;
 const cell_number = 15;
@@ -257,7 +274,7 @@ class MAIN {
 
     game_over() {
         this.snake.reset();
-        this.fruit.randomize(this.snake.body);ы
+        this.fruit.randomize(this.snake.body);
     }
 
     draw_grass() {
@@ -281,17 +298,17 @@ class MAIN {
         const score = this.snake.body.length - 3;
         const score_text = String(score);
         
-        ctx.font = 'bold 28px "Poetsen One"';
+        ctx.font = '25px "Poetsen One"';
         
         const apple_size = 30;
         const padding = 15;
         const score_width = ctx.measureText(score_text).width;
         const total_width = score_width + apple_size + padding * 3;
-        const block_height = 45;
+        const block_height = 35;
         
-        const right_margin = 25;
+        const right_margin = 40;
         const block_x = cell_size * cell_number - total_width - right_margin;
-        const block_y = cell_size * cell_number + 15;
+        const block_y = cell_size * cell_number + 22.5;
         
         ctx.beginPath();
         ctx.roundRect(block_x, block_y, total_width, block_height, 8);
@@ -300,8 +317,8 @@ class MAIN {
 
         ctx.drawImage(apple_img, block_x + padding, block_y + (block_height - apple_size)/2, apple_size, apple_size);
         
-        ctx.fillStyle = '#203a0a';
-        ctx.fillText(score_text, block_x + padding + apple_size + 15, block_y + block_height - 12);
+        ctx.fillStyle = '#000000';
+        ctx.fillText(score_text, block_x + padding + apple_size + 10, block_y + block_height - 8);
     }
 }
 
@@ -353,5 +370,3 @@ document.addEventListener('keydown', (event) => {
         }
     }
 });
-
-game();
