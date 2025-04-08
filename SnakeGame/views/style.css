@@ -278,3 +278,34 @@ h1 {
     margin: 20px 0;
     color: #f1c40f;
 }
+
+#leaderboard-table {
+    width: 80%;
+    border-collapse: collapse;
+    margin: 10px auto;
+}
+
+#leaderboard-table th, #leaderboard-table td {
+    border: 1px solid #ffffff;
+    padding: 8px;
+    text-align: center;
+}
+
+#leaderboard-table th {
+    background-color: #d8d8d8;
+    color: black;
+    font-weight: bold;
+}
+
+.medal-container {
+    display: inline-block;
+    margin-right: 5px;
+}
+
+.name-container {
+    display: inline-block;
+}
+
+#leaderboard-table td {
+    text-align: left;
+}

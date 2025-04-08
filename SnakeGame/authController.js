@@ -134,6 +134,16 @@ class authController {
             return res.status(500).json({ message: 'Failed to get score' });
         }
     }
+
+    async getLeaderboard(req, res) {
+        try {
+            const users = await User.find({}, 'username score').sort({ score: -1 }).limit(10); // Выбираем только имя и счет, сортируем по убыванию счета, ограничиваем 10 пользователями
+            res.json(users);
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ message: 'Failed to fetch leaderboard' });
+        }
+    }
 }
 
 module.exports = new authController()

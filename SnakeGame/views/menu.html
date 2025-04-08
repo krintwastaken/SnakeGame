@@ -54,73 +54,21 @@
         <div class="modal-content">
             <span class="close-modal" onclick="closeModal('leaders-modal')">&times;</span>
             <h2>Таблица лидеров</h2>
-            <div class="in-dev-message">В разработке</div>
-            <p>Скоро здесь появится список лучших игроков!</p>
+            <table id="leaderboard-table">
+                <thead>
+                    <tr>
+                        <th>Имя</th>
+                        <th>Счёт</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Строки таблицы будут добавлены JavaScript -->
+                </tbody>
+            </table>
+            <div id="leaderboard-error" class="error-message" style="display: none;"></div>
         </div>
     </div>
 
-    <script>
-        window.onload = function() {
-            setTimeout(function() {
-                document.getElementById('menu').classList.add('show');
-            }, 100);
-        };
-
-        function startGame() {
-            const playButton = document.getElementById('play-button');
-            const errorElement = document.getElementById('error-message');
-            
-            errorElement.style.display = 'none';
-            errorElement.textContent = '';
-            
-            playButton.textContent = 'Загрузка...';
-            playButton.disabled = true;
-            
-            fetch('../snake/game.html')
-                .then(response => {
-                    if (!response.ok) throw new Error('Файл игры не найден');
-                    
-                    document.getElementById('menu').classList.remove('show');
-                    setTimeout(() => {
-                        window.location.href = "../snake/game.html";
-                    }, 500);
-                })
-                .catch(error => {
-                    errorElement.textContent = error.message;
-                    errorElement.style.display = 'block';
-                    playButton.textContent = 'Играть';
-                    playButton.disabled = false;
-                });
-        }
-
-        function showInstructions() {
-            document.getElementById('instructions-modal').style.display = 'flex';
-        }
-
-        function showShop() {
-            document.getElementById('shop-modal').style.display = 'flex';
-        }
-
-        function showLeaders() {
-            document.getElementById('leaders-modal').style.display = 'flex';
-        }
-
-        function exitGame() {
-            if (confirm('Вы действительно хотите выйти в меню авторизации?')) {
-                window.location.href = "../views/login.html";
-            }
-        }
-
-        function closeModal(modalId) {
-            document.getElementById(modalId).style.display = 'none';
-        }
-
-        // Закрытие модального окна при клике вне его
-        window.onclick = function(event) {
-            if (event.target.className === 'modal') {
-                event.target.style.display = 'none';
-            }
-        }
-    </script>
+    <script src="menu.js"></script>
 </body>
 </html>

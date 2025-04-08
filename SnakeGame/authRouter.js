@@ -30,4 +30,6 @@ router.get('/users', roleMiddleware(["ADMIN"]), controller.getUsers);
 
 router.get('/score', authMiddleware, controller.getScore);
 
+router.get('/leaderboard', authMiddleware, controller.getLeaderboard);
+
 module.exports = router;
