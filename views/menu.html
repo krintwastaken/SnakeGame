@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Змейка - Меню</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container menu-container" id="menu">
+        <h1>Змейка</h1>
+        <button id="play-button" class="menu-button" onclick="startGame()">Играть</button>
+        <button id="instructions-button" class="menu-button" onclick="showInstructions()">Инструкция</button>
+        <button id="shop-button" class="menu-button" onclick="showShop()">Магазин</button>
+        <button id="leaders-button" class="menu-button" onclick="showLeaders()">Таблица лидеров</button>
+        <button id="exit-button" class="menu-button" onclick="exitGame()">Выход</button>
+        <div id="error-message" class="error-message"></div>
+    </div>
+
+    <!-- Модальное окно для инструкции -->
+    <div id="instructions-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('instructions-modal')">&times;</span>
+            <h2>Инструкция к игре "Змейка"</h2>
+            <p>Цель игры - управлять змейкой и собирать яблоки, чтобы увеличивать её длину.</p>
+            <h3>Управление:</h3>
+            <ul>
+                <li><strong>Стрелка вверх</strong> - движение вверх</li>
+                <li><strong>Стрелка вниз</strong> - движение вниз</li>
+                <li><strong>Стрелка влево</strong> - движение влево</li>
+                <li><strong>Стрелка вправо</strong> - движение вправо</li>
+            </ul>
+            <h3>Правила:</h3>
+            <ul>
+                <li>Каждое съеденное яблоко увеличивает длину змейки и даёт 1 очко</li>
+                <li>Не врезайтесь в стены и в собственное тело</li>
+                <li>Чем длиннее змейка, тем сложнее управление</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Модальное окно для магазина -->
+    <div id="shop-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('shop-modal')">&times;</span>
+            <h2>Магазин</h2>
+            <div class="in-dev-message">В разработке</div>
+            <p>Скоро здесь появится магазин с крутыми скинами для змейки!</p>
+        </div>
+    </div>
+
+    <!-- Модальное окно для таблицы лидеров -->
+    <div id="leaders-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('leaders-modal')">&times;</span>
+            <h2>Таблица лидеров</h2>
+            <div class="in-dev-message">В разработке</div>
+            <p>Скоро здесь появится список лучших игроков!</p>
+        </div>
+    </div>
+
+    <script>
+        window.onload = function() {
+            setTimeout(function() {
+                document.getElementById('menu').classList.add('show');
+            }, 100);
+        };
+
+        function startGame() {
+            const playButton = document.getElementById('play-button');
+            const errorElement = document.getElementById('error-message');
+            
+            errorElement.style.display = 'none';
+            errorElement.textContent = '';
+            
+            playButton.textContent = 'Загрузка...';
+            playButton.disabled = true;
+            
+            fetch('../snake/game.html')
+                .then(response => {
+                    if (!response.ok) throw new Error('Файл игры не найден');
+                    
+                    document.getElementById('menu').classList.remove('show');
+                    setTimeout(() => {
+                        window.location.href = "../snake/game.html";
+                    }, 500);
+                })
+                .catch(error => {
+                    errorElement.textContent = error.message;
+                    errorElement.style.display = 'block';
+                    playButton.textContent = 'Играть';
+                    playButton.disabled = false;
+                });
+        }
+
+        function showInstructions() {
+            document.getElementById('instructions-modal').style.display = 'flex';
+        }
+
+        function showShop() {
+            document.getElementById('shop-modal').style.display = 'flex';
+        }
+
+        function showLeaders() {
+            document.getElementById('leaders-modal').style.display = 'flex';
+        }
+
+        function exitGame() {
+            if (confirm('Вы действительно хотите выйти в меню авторизации?')) {
+                window.location.href = "../views/login.html";
+            }
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        // Закрытие модального окна при клике вне его
+        window.onclick = function(event) {
+            if (event.target.className === 'modal') {
+                event.target.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>

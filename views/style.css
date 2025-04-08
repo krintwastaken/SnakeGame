@@ -1,0 +1,280 @@
+body {
+    margin: 0;
+    font-family: 'Poetsen One', cursive;
+    background: linear-gradient(to bottom, #56c70a, #3CB371);
+    background-repeat: repeat;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    color: white;
+    text-align: center;
+}
+
+.container {
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
+    width: 90%;
+    max-width: 400px;
+}
+
+.container h2 {
+    font-size: 2em;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+.container label {
+    display: block;
+    margin-bottom: 5px;
+    text-align: left;
+}
+
+.container input[type="email"],
+.container input[type="text"],
+.container input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 5px;
+    background-color: rgba(0, 0, 0, 0.3);
+    color: white;
+    box-sizing: border-box;
+}
+
+.container input[type="email"]:focus,
+.container input[type="text"]:focus,
+.container input[type="password"]:focus {
+    outline: none;
+    border-color: rgba(255, 255, 255, 0.7);
+}
+
+.container button {
+    background-color: #56c70a;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1.5em;
+    transition: background-color .3s ease;
+    width: 100%;
+    font-family: 'Poetsen One', cursive;
+}
+
+.container button:hover {
+    background-color: #3CB371;
+}
+
+.container .error-message {
+    color: #ff4d4d;
+    margin-top: 10px;
+}
+
+h1 {
+    font-size: 3em;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+#gameCanvas {
+    background-color: #000;
+    border: 5px solid #fff;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+.controls {
+    margin-top: 20px;
+    padding: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 5px;
+}
+
+.controls h2 {
+    font-size: 2.0em;
+    margin-bottom: 10px;
+}
+
+.controls p {
+    font-size: 1.1em;
+}
+
+@media (max-width: 600px) {
+    .container {
+        width: 95%;
+        padding: 10px;
+    }
+
+    h1 {
+        font-size: 2.5em;
+    }
+}
+
+.password-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+.password-container input {
+    padding-right: 30px;
+  }
+
+.password-container i {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-95%);
+    cursor: pointer;
+  }
+
+.links {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    margin-left: 10px;
+    font-size: 18px;
+    color: #ffffff;
+}
+
+.links a {
+    text-decoration: none;
+}
+
+.links a:hover {
+    text-decoration: underline;
+}
+
+.link-item a{
+    color: #FFFFFF;
+}
+
+.login-link {
+    color: #FFFF00;
+}
+
+.menu-container {
+    transform: scale(0.8);
+    opacity: 0;
+    transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.menu-container.show {
+    transform: scale(1);
+    opacity: 1;
+}
+
+h1 {
+    transform: translateY(20px);
+    opacity: 0;
+    transition: all 0.4s ease 0.2s;
+}
+
+.menu-container.show h1 {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+.menu-button {
+    transform: translateY(20px);
+    opacity: 0;
+    transition: all 0.4s ease;
+    background-color: #56c70a;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1.2em;
+    width: 100%;
+    font-family: 'Poetsen One', cursive;
+    margin: 10px 0;
+}
+
+.menu-container.show .menu-button {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+.menu-button:hover {
+    background-color: #3CB371;
+}
+
+#play-button {
+    transition-delay: 0.3s;
+}
+
+#instructions-button {
+    transition-delay: 0.4s;
+}
+
+#shop-button {
+    transition-delay: 0.5s;
+    /* Убрано синее выделение, теперь зеленая как все */
+}
+
+#leaders-button {
+    transition-delay: 0.6s;
+}
+
+#exit-button {
+    transition-delay: 0.7s;
+    background-color: #e74c3c;
+}
+
+#exit-button:hover {
+    background-color: #c0392b;
+}
+
+.error-message {
+    color: #ff4d4d;
+    margin-top: 15px;
+    display: none;
+}
+
+/* Стиль для модального окна */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.7);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: #006400;
+    padding: 20px;
+    border-radius: 10px;
+    max-width: 500px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+    color: white;
+    position: relative;
+    text-align: center;
+}
+
+.close-modal {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 1.5em;
+    cursor: pointer;
+}
+
+.in-dev-message {
+    font-size: 1.5em;
+    margin: 20px 0;
+    color: #f1c40f;
+}
