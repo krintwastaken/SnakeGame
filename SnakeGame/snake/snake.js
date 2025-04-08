@@ -1,12 +1,16 @@
 const font = new FontFace('Poetsen One', 'url(./Fonts/PoetsenOne-Regular.ttf)');
 
-font.load().then(function(loaded_font) {
-  document.fonts.add(loaded_font);
-  console.log('Font loaded');
-  game();
-}).catch(function(error) {
-  console.error('Font loading error:', error);
-});
+   font.load().then(function(loaded_font) {
+       document.fonts.add(loaded_font);
+       console.log('Font loaded');
+
+       document.fonts.ready.then(() => {
+           game();
+       });
+
+   }).catch(function(error) {
+       console.error('Font loading error:', error);
+   });
 
 // Графика
 const head_up_img = new Image();
@@ -230,6 +234,42 @@ class MAIN {
     constructor() {
         this.snake = new SNAKE();
         this.fruit = new FRUIT();
+        this.currentScore = 0;
+        this.totalScore = 0;
+    }
+
+    resetGame() {
+        this.snake.reset();
+        this.fruit.randomize(this.snake.body);
+        this.currentScore = 0;
+        this.getTotalScore();
+    }
+
+    async getTotalScore() {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            console.error('No token found.');
+            return;
+        }
+
+        try {
+            const response = await fetch('http://localhost:5000/auth/score', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            if (!response.ok) {
+                console.error('Failed to get total score:', response.status, response.statusText);
+            } else {
+                const data = await response.json();
+                this.totalScore = data.score;
+                this.draw_score();
+            }
+        } catch (error) {
+            console.error('Error getting total score:', error);
+        }
     }
 
     update() {
@@ -250,6 +290,8 @@ class MAIN {
             this.snake.add_block();
             this.snake.play_crunch_sound();
             this.fruit.randomize(this.snake.body);
+            this.currentScore++;
+            this.draw_score();
         }
     }
 
@@ -278,6 +320,7 @@ class MAIN {
         this.fruit.randomize(this.snake.body);
 
         this.sendScoreToServer(score);
+        this.currentScore = 0;
     }
 
     async sendScoreToServer(score) {
@@ -303,6 +346,8 @@ class MAIN {
             } else {
                 const data = await response.json();
                 console.log('Score updated successfully:', data);
+                this.totalScore = data.newScore;
+                this.draw_score();
             }
         } catch (error) {
             console.error('Error sending score:', error);
@@ -327,30 +372,68 @@ class MAIN {
     }
 
     draw_score() {
-        const score = this.snake.body.length - 3;
-        const score_text = String(score);
-        
-        ctx.font = '25px "Poetsen One"';
-        
+        const score_text = String(this.currentScore);
+        const total_score_text = String(this.totalScore);
+    
+        // Общие параметры
         const apple_size = 30;
         const padding = 15;
+        const block_height = 35;
+        const right_margin = 40;
+        const text_color = '#000000';
+        const score_area_height = cell_size * 2;
+    
+        // --- Текущий счет ---
         const score_width = ctx.measureText(score_text).width;
         const total_width = score_width + apple_size + padding * 3;
-        const block_height = 35;
-        
-        const right_margin = 40;
         const block_x = cell_size * cell_number - total_width - right_margin;
-        const block_y = cell_size * cell_number + 22.5;
-        
+        const block_y = cell_size * cell_number + (score_area_height - block_height) / 2;
+    
         ctx.beginPath();
         ctx.roundRect(block_x, block_y, total_width, block_height, 8);
         ctx.fillStyle = 'rgb(167, 220, 61)';
         ctx.fill();
-
-        ctx.drawImage(apple_img, block_x + padding, block_y + (block_height - apple_size)/2, apple_size, apple_size);
-        
-        ctx.fillStyle = '#000000';
-        ctx.fillText(score_text, block_x + padding + apple_size + 10, block_y + block_height - 8);
+    
+        ctx.drawImage(apple_img, block_x + padding, block_y + (block_height - apple_size) / 2, apple_size, apple_size);
+        ctx.fillStyle = text_color;
+    
+        ctx.font = '25px "Poetsen One"';
+        ctx.textAlign = 'left';
+        ctx.fillText(score_text, block_x + padding + apple_size + padding / 2, block_y + block_height - 8);
+    
+        ctx.font = '16px "Poetsen One"';
+        const current_score_label = "Current";
+        const current_score_label_width = ctx.measureText(current_score_label).width;
+        const current_score_label_x = block_x + (total_width - current_score_label_width) / 2;
+        const current_score_label_y = cell_size * cell_number + (score_area_height / 4) - 2.5;
+        ctx.fillStyle = text_color;
+        ctx.fillText(current_score_label, current_score_label_x, current_score_label_y);
+    
+        // --- Общий счет ---
+        const total_score_width = ctx.measureText(total_score_text).width;
+        const total_total_width = total_score_width + apple_size + padding * 3;
+        const total_block_x = right_margin;
+        const total_block_y = cell_size * cell_number + (score_area_height - block_height) / 2;
+    
+        ctx.beginPath();
+        ctx.roundRect(total_block_x, total_block_y, total_total_width + 10, block_height, 8);
+        ctx.fillStyle = 'rgb(167, 220, 61)';
+        ctx.fill();
+    
+        ctx.drawImage(apple_img, total_block_x + padding, total_block_y + (block_height - apple_size) / 2, apple_size, apple_size);
+        ctx.fillStyle = text_color;
+    
+        ctx.font = '25px "Poetsen One"';
+        ctx.textAlign = 'left';
+        ctx.fillText(total_score_text, total_block_x + padding + apple_size + padding / 2, total_block_y + block_height - 8);
+    
+        ctx.font = '16px "Poetsen One"';
+        const total_score_label = "Total";
+        const total_score_label_width = ctx.measureText(total_score_label).width;
+        const total_score_label_x = total_block_x + (total_total_width - total_score_label_width) / 2;
+        const total_score_label_y = cell_size * cell_number + (score_area_height / 4) - 2.5;
+        ctx.fillStyle = text_color;
+        ctx.fillText(total_score_label, total_score_label_x, total_score_label_y);
     }
 }
 
@@ -360,11 +443,13 @@ let gameInterval;
 
 function game() {
     main_game = new MAIN();
+    main_game.resetGame();
+
     clearInterval(gameInterval);
     gameInterval = setInterval(() => {
         main_game.update();
         draw();
-    }, 250);
+    }, 200);
 }
 
 function draw() {

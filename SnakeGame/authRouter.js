@@ -28,4 +28,6 @@ router.post('/update-score', authMiddleware, controller.updateScore);
 
 router.get('/users', roleMiddleware(["ADMIN"]), controller.getUsers);
 
+router.get('/score', authMiddleware, controller.getScore);
+
 module.exports = router;
