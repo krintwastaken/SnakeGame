@@ -1,12 +1,15 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const authRouter = require('./authRouter');
-const cors = require('cors');  // Добавляем cors
+const cors = require('cors');
 const PORT = process.env.PORT || 5000;
 
 const app = express();
 
-app.use(cors()); // Включаем CORS для всех маршрутов (для начала)
+app.use(cors({
+    origin: 'http://127.0.0.1:5500',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+}));
 app.use(express.json());
 app.use("/auth", authRouter);
 
