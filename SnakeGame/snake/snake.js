@@ -273,8 +273,40 @@ class MAIN {
     }
 
     game_over() {
+        const score = this.snake.body.length - 3;
         this.snake.reset();
         this.fruit.randomize(this.snake.body);
+
+        this.sendScoreToServer(score);
+    }
+
+    async sendScoreToServer(score) {
+        const token = localStorage.getItem('token');
+
+        if (!token) {
+            console.error('No token found.  User might not be logged in.');
+            return;
+        }
+
+        try {
+            const response = await fetch('http://localhost:5000/auth/update-score', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ score: score })
+            });
+
+            if (!response.ok) {
+                console.error('Failed to update score:', response.status, response.statusText);
+            } else {
+                const data = await response.json();
+                console.log('Score updated successfully:', data);
+            }
+        } catch (error) {
+            console.error('Error sending score:', error);
+        }
     }
 
     draw_grass() {

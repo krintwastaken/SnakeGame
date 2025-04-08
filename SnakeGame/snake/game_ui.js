@@ -6,7 +6,7 @@ const volumeSlider = document.getElementById('volumeSlider');
 const volumeIcon = document.getElementById('volumeIcon');
 
 volumeSlider.addEventListener('input', (event) => {
-    const volume = event.target.value / 100; // Получаем значение от 0 до 1
+    const volume = event.target.value / 100;
     setVolume(volume);
     updateVolumeIcon(volume);
 });
