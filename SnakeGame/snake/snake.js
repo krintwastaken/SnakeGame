@@ -48,6 +48,34 @@ body_bl_img.src = 'Graphics/body_bl.png';
 const apple_img = new Image();
 apple_img.src = 'Graphics/apple.png';
 
+const banana_img = new Image();
+banana_img.src = 'Graphics/banana.png';
+banana_img.onerror = function() {
+    console.error('Ошибка загрузки изображения банана');
+    this.src = 'Graphics/apple.png';
+};
+
+const lemon_img = new Image();
+lemon_img.src = 'Graphics/lemon.png';
+lemon_img.onerror = function() {
+    console.error('Ошибка загрузки изображения лимона');
+    this.src = 'Graphics/apple.png';
+};
+
+const watermelon_img = new Image();
+watermelon_img.src = 'Graphics/watermelon.png';
+watermelon_img.onerror = function() {
+    console.error('Ошибка загрузки изображения арбуза');
+    this.src = 'Graphics/apple.png';
+};
+
+const pineapple_img = new Image();
+pineapple_img.src = 'Graphics/pineapple.png';
+pineapple_img.onerror = function() {
+    console.error('Ошибка загрузки изображения ананаса');
+    this.src = 'Graphics/apple.png';
+};
+
 // Звуки
 const crunch_sound = new Audio('Sounds/music_food.mp3');
 const turn_sound = new Audio('Sounds/music_move.mp3');
@@ -191,13 +219,37 @@ class SNAKE {
 
 class FRUIT {
     constructor() {
+        this.currentFruit = 'apple'; // По умолчанию яблоко
         this.randomize([]);
     }
 
     draw_fruit() {
         const x_pos = Math.trunc(this.pos.x * cell_size);
         const y_pos = Math.trunc(this.pos.y * cell_size);
-        ctx.drawImage(apple_img, x_pos, y_pos, cell_size, cell_size);
+        let fruitImage;
+        
+        switch(this.currentFruit) {
+            case 'banana':
+                fruitImage = banana_img.complete && banana_img.naturalWidth !== 0 ? banana_img : apple_img;
+                break;
+            case 'lemon':
+                fruitImage = lemon_img.complete && lemon_img.naturalWidth !== 0 ? lemon_img : apple_img;
+                break;
+            case 'watermelon':
+                fruitImage = watermelon_img.complete && watermelon_img.naturalWidth !== 0 ? watermelon_img : apple_img;
+                break;
+            case 'pineapple':
+                fruitImage = pineapple_img.complete && pineapple_img.naturalWidth !== 0 ? pineapple_img : apple_img;
+                break;
+            default:
+                fruitImage = apple_img;
+        }
+        
+        ctx.drawImage(fruitImage, x_pos, y_pos, cell_size, cell_size);
+    }
+
+    setFruitType(type) {
+        this.currentFruit = type;
     }
 
     randomize(snakeBody) {
@@ -236,6 +288,10 @@ class MAIN {
         this.fruit = new FRUIT();
         this.currentScore = 0;
         this.totalScore = 0;
+        
+        // Устанавливаем выбранный фрукт
+        const selectedFruit = localStorage.getItem('selectedFruit') || 'apple';
+        this.fruit.setFruitType(selectedFruit);
     }
 
     resetGame() {
@@ -243,6 +299,10 @@ class MAIN {
         this.fruit.randomize(this.snake.body);
         this.currentScore = 0;
         this.getTotalScore();
+        
+        // Устанавливаем выбранный фрукт при сбросе игры
+        const selectedFruit = localStorage.getItem('selectedFruit') || 'apple';
+        this.fruit.setFruitType(selectedFruit);
     }
 
     async getTotalScore() {
@@ -394,7 +454,27 @@ class MAIN {
         ctx.fillStyle = 'rgb(167, 220, 61)';
         ctx.fill();
     
-        ctx.drawImage(apple_img, block_x + padding, block_y + (block_height - apple_size) / 2, apple_size, apple_size);
+        // Получаем текущий фрукт
+        const selectedFruit = localStorage.getItem('selectedFruit') || 'apple';
+        let fruitImage;
+        switch(selectedFruit) {
+            case 'banana':
+                fruitImage = banana_img;
+                break;
+            case 'lemon':
+                fruitImage = lemon_img;
+                break;
+            case 'watermelon':
+                fruitImage = watermelon_img;
+                break;
+            case 'pineapple':
+                fruitImage = pineapple_img;
+                break;
+            default:
+                fruitImage = apple_img;
+        }
+    
+        ctx.drawImage(fruitImage, block_x + padding, block_y + (block_height - apple_size) / 2, apple_size, apple_size);
         ctx.fillStyle = text_color;
     
         ctx.font = '25px "Poetsen One"';
@@ -420,7 +500,7 @@ class MAIN {
         ctx.fillStyle = 'rgb(167, 220, 61)';
         ctx.fill();
     
-        ctx.drawImage(apple_img, total_block_x + padding, total_block_y + (block_height - apple_size) / 2, apple_size, apple_size);
+        ctx.drawImage(fruitImage, total_block_x + padding, total_block_y + (block_height - apple_size) / 2, apple_size, apple_size);
         ctx.fillStyle = text_color;
     
         ctx.font = '25px "Poetsen One"';

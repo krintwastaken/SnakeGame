@@ -133,3 +133,34 @@ window.onclick = function(event) {
         event.target.style.display = 'none';
     }
 }
+
+function selectFruit(fruitType) {
+    const fruitImages = {
+        'apple': '../snake/Graphics/apple.png',
+        'banana': '../snake/Graphics/banana.png',
+        'lemon': '../snake/Graphics/lemon.png',
+        'watermelon': '../snake/Graphics/watermelon.png',
+        'pineapple': '../snake/Graphics/pineapple.png'
+    };
+
+    const fruitNames = {
+        'apple': 'Яблоко',
+        'banana': 'Банан',
+        'lemon': 'Лимон',
+        'watermelon': 'Арбуз',
+        'pineapple': 'Ананас'
+    };
+
+    const img = new Image();
+    img.src = fruitImages[fruitType];
+    
+    img.onerror = function() {
+        alert(`Ошибка загрузки изображения ${fruitNames[fruitType]}. Пожалуйста, выберите другой фрукт.`);
+        return;
+    };
+    
+    img.onload = function() {
+        localStorage.setItem('selectedFruit', fruitType);
+        alert(`Выбран фрукт: ${fruitNames[fruitType]}`);
+    };
+}
