@@ -9,6 +9,7 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
+    <div class="page-transition"></div>
     <div class="top-left-corner">
         <button id="authButton">
             <span class="material-icons">arrow_back</span>
@@ -20,9 +21,10 @@
             <input type="range" id="volumeSlider" min="0" max="100" value="100">
         </div>
     </div>
-    <div class="container">
+    <div class="container game-container">
         <canvas id="gameCanvas"></canvas>
     </div>
+
     <script src="snake.js"></script>
     <script src="game_ui.js"></script>
     <script>

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
+    <script src="animations.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Змейка - Меню</title>
@@ -21,20 +22,43 @@
     <div id="instructions-modal" class="modal">
         <div class="modal-content">
             <span class="close-modal" onclick="closeModal('instructions-modal')">&times;</span>
-            <h2>Инструкция к игре "Змейка"</h2>
-            <p>Цель игры - управлять змейкой и собирать яблоки, чтобы увеличивать её длину.</p>
-            <h3>Управление:</h3>
-            <ul>
-                <li><strong>Стрелка вверх</strong> - движение вверх</li>
-                <li><strong>Стрелка вниз</strong> - движение вниз</li>
-                <li><strong>Стрелка влево</strong> - движение влево</li>
-                <li><strong>Стрелка вправо</strong> - движение вправо</li>
-            </ul>
-            <h3>Правила:</h3>
-            <ul>
-                <li>Каждое съеденное яблоко увеличивает длину змейки и даёт 1 очко</li>
-                <li>Не врезайтесь в стены и в собственное тело</li>
-                <li>Чем длиннее змейка, тем сложнее управление</li>
+            <h2>🎮 Инструкция к игре "Змейка"</h2>
+            <div class="rules-list">
+                <p>Цель игры - управлять змейкой и собирать фрукты, увеличивая её длину и счёт!</p>
+                
+                <div class="instruction-item">
+                    <svg class="instruction-icon" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                    </svg>
+                    <div class="instruction-text">
+                        <strong>Управление:</strong> Используйте стрелки на клавиатуре
+                    </div>
+                </div>
+    
+                <div class="instruction-item">
+                    <svg class="instruction-icon" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/>
+                    </svg>
+                    <div class="instruction-text">
+                        <strong>Съешь фрукт</strong> - получи +1 очко и стань длиннее
+                    </div>
+                </div>
+    
+                <div class="instruction-item">
+                    <svg class="instruction-icon" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-2-3.5l6-4.5-6-4.5z"/>
+                    </svg>
+                    <div class="instruction-text">
+                        <strong>Избегай стен</strong> и собственного тела
+                    </div>
+                </div>
+            </div>
+    
+            <h3 style="color: #56c70a; margin-top: 20px;">📜 Основные правила:</h3>
+            <ul class="rules-list">
+                <li>★ Каждый фрукт увеличивает длину змейки</li>
+                <li>★ Чем длиннее змейка, тем выше сложность</li>
+                <li>★ Набери максимум очков и попади в топ!</li>
             </ul>
         </div>
     </div>
@@ -82,6 +106,7 @@
             <table id="leaderboard-table">
                 <thead>
                     <tr>
+                        <th>Место</th>
                         <th>Имя</th>
                         <th>Счёт</th>
                     </tr>
@@ -93,7 +118,7 @@
             <div id="leaderboard-error" class="error-message" style="display: none;"></div>
         </div>
     </div>
-
+    
     <script src="menu.js"></script>
 </body>
 </html>

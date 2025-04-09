@@ -158,3 +158,51 @@ h1 {
     font-size: 32px;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
 }
+
+/* Анимации для страницы игры */
+.game-container {
+    transform: translateY(30px) scale(0.95);
+    opacity: 0;
+    transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.game-container.show {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+}
+
+/* Анимация закрытия игры */
+.game-container.hide {
+    transform: translateY(50px) scale(0.9) rotate(3deg);
+    opacity: 0;
+    filter: blur(8px);
+    transition: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.page-transition-exit {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #016901;
+    z-index: 9999;
+    clip-path: circle(0% at 50% 50%);
+    animation: exitTransition 1s ease-in-out;
+    pointer-events: none;
+}
+
+@keyframes exitTransition {
+    0% {
+        clip-path: circle(0% at 50% 50%);
+        opacity: 1;
+    }
+    50% {
+        clip-path: circle(100% at 50% 50%);
+        opacity: 0.9;
+    }
+    100% {
+        clip-path: circle(150% at 50% 50%);
+        opacity: 0;
+    }
+}

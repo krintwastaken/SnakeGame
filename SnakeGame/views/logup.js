@@ -1,6 +1,11 @@
+document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(() => {
+        document.querySelector('.container').classList.add('show');
+    }, 100);
+});
+
 document.getElementById('registrationForm').addEventListener('submit', function(event) {
     event.preventDefault();
-
     const username = document.getElementById('username').value;
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
@@ -21,17 +26,19 @@ document.getElementById('registrationForm').addEventListener('submit', function(
     .then(response => {
         if (!response.ok) {
             return response.json().then(error => {
-                throw new Error(error.message || 'Произошла ошибка при регистрации.');
+                throw new Error(error.message || 'Ошибка регистрации.');
             });
         }
         return response.json();
     })
     .then(data => {
-        alert('Регистрация прошла успешно!');
-        window.location.href = 'login.html';
+        alert('Регистрация успешна!');
+        // Анимация перехода
+        document.querySelector('.container').classList.remove('show');
+        document.querySelector('.container').classList.add('hide');
+        setTimeout(() => navigateTo('login.html'), 500);
     })
     .catch(error => {
-        console.error('Ошибка:', error);
-        document.getElementById('error-message').textContent = error.message || 'Произошла ошибка при отправке запроса.';
+        document.getElementById('error-message').textContent = error.message;
     });
 });

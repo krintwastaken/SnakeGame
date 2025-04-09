@@ -1,3 +1,9 @@
+document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(() => {
+        document.querySelector('.container').classList.add('show');
+    }, 100);
+});
+
 document.getElementById('loginForm').addEventListener('submit', function(event) {
     event.preventDefault();
     const password = document.getElementById('password').value;
@@ -24,14 +30,15 @@ document.getElementById('loginForm').addEventListener('submit', function(event) 
         return response.json();
     })
     .then(data => {
-        setTimeout(() => {
-            window.location.href = 'menu.html';
-        }, 200);
-        localStorage.setItem('token', data.token); 
+        localStorage.setItem('token', data.token);
+        // Анимация исчезновения
+        document.querySelector('.container').classList.remove('show');
+        document.querySelector('.container').classList.add('hide');
+        // Переход с задержкой
+        setTimeout(() => navigateTo('menu.html'), 500);
     })
     .catch(error => {
         console.error('Ошибка:', error);
-        document.getElementById('error-message').textContent = error.message || 'Произошла ошибка при отправке запроса.';
+        document.getElementById('error-message').textContent = error.message;
     });
 });
-

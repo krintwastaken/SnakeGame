@@ -1,12 +1,17 @@
+document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(() => {
+        document.querySelector('.container').classList.add('show');
+    }, 100);
+});
+
 document.getElementById('resetPasswordForm').addEventListener('submit', function(event) {
     event.preventDefault();
-
     const email = document.getElementById('email').value;
     const newPassword = document.getElementById('password').value;
     const confirmPassword = document.getElementById('confirmPassword').value;
 
     if (newPassword !== confirmPassword) {
-        document.getElementById('error-message').textContent = 'Новый пароль и его подтверждение не совпадают.';
+        document.getElementById('error-message').textContent = 'Пароли не совпадают.';
         return;
     }
 
@@ -20,17 +25,19 @@ document.getElementById('resetPasswordForm').addEventListener('submit', function
     .then(response => {
         if (!response.ok) {
             return response.json().then(error => {
-                throw new Error(error.message || 'Ошибка при сбросе пароля.');
+                throw new Error(error.message || 'Ошибка сброса пароля.');
             });
         }
         return response.json();
     })
     .then(data => {
-        alert('Пароль успешно сброшен!');
-        window.location.href = 'login.html';
+        alert('Пароль сброшен!');
+        // Анимация перехода
+        document.querySelector('.container').classList.remove('show');
+        document.querySelector('.container').classList.add('hide');
+        setTimeout(() => navigateTo('login.html'), 500);
     })
     .catch(error => {
-        console.error('Ошибка:', error);
-        document.getElementById('error-message').textContent = error.message || 'Произошла ошибка при отправке запроса.';
+        document.getElementById('error-message').textContent = error.message;
     });
 });
