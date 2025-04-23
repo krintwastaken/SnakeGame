@@ -119,6 +119,42 @@ class authController {
         }
     }
 
+    async updateSelectedFruit(req, res) {
+        try {
+            const userId = req.user.id;
+            const { fruitType } = req.body;
+
+            const user = await User.findById(userId);
+            if (!user) {
+                return res.status(404).json({ message: 'User not found' });
+            }
+
+            user.selectedFruit = fruitType;
+            await user.save();
+
+            return res.json({ message: 'Fruit updated successfully', selectedFruit: user.selectedFruit });
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({ message: 'Failed to update fruit' });
+        }
+    }
+
+    async getSelectedFruit(req, res) {
+        try {
+            const userId = req.user.id;
+            const user = await User.findById(userId);
+
+            if (!user) {
+                return res.status(404).json({ message: 'User not found' });
+            }
+
+            return res.json({ selectedFruit: user.selectedFruit });
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({ message: 'Failed to get selected fruit' });
+        }
+    }
+
     async getScore(req, res) {
         try {
             const userId = req.user.id;

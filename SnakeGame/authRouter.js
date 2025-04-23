@@ -25,6 +25,8 @@ router.post('/login', [
 router.post('/reset_password', controller.reset_password);
 
 router.post('/update-score', authMiddleware, controller.updateScore);
+router.post('/update-fruit', authMiddleware, controller.updateSelectedFruit);
+router.get('/get-fruit', authMiddleware, controller.getSelectedFruit);
 
 router.get('/users', roleMiddleware(["ADMIN"]), controller.getUsers);
 

@@ -1,124 +1,261 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <script src="animations.js"></script>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Змейка - Меню</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <div class="container menu-container" id="menu">
-        <h1>Змейка</h1>
-        <button id="play-button" class="menu-button" onclick="startGame()">Играть</button>
-        <button id="instructions-button" class="menu-button" onclick="showInstructions()">Инструкция</button>
-        <button id="shop-button" class="menu-button" onclick="showShop()">Магазин</button>
-        <button id="leaders-button" class="menu-button" onclick="showLeaders()">Таблица лидеров</button>
-        <button id="exit-button" class="menu-button" onclick="exitGame()">Выход</button>
-        <div id="error-message" class="error-message"></div>
-    </div>
+// Добавляем функцию для навигации с анимацией
+function navigateTo(url) {
+    const transition = document.createElement('div');
+    transition.className = 'page-transition';
+    document.body.appendChild(transition);
+    setTimeout(() => window.location.href = url, 1000);
+}
 
-    <!-- Модальное окно для инструкции -->
-    <div id="instructions-modal" class="modal">
-        <div class="modal-content">
-            <span class="close-modal" onclick="closeModal('instructions-modal')">&times;</span>
-            <h2>🎮 Инструкция к игре "Змейка"</h2>
-            <div class="rules-list">
-                <p>Цель игры - управлять змейкой и собирать фрукты, увеличивая её длину и счёт!</p>
-                
-                <div class="instruction-item">
-                    <svg class="instruction-icon" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
-                    </svg>
-                    <div class="instruction-text">
-                        <strong>Управление:</strong> Используйте стрелки на клавиатуре
-                    </div>
-                </div>
-    
-                <div class="instruction-item">
-                    <svg class="instruction-icon" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/>
-                    </svg>
-                    <div class="instruction-text">
-                        <strong>Съешь фрукт</strong> - получи +1 очко и стань длиннее
-                    </div>
-                </div>
-    
-                <div class="instruction-item">
-                    <svg class="instruction-icon" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-2-3.5l6-4.5-6-4.5z"/>
-                    </svg>
-                    <div class="instruction-text">
-                        <strong>Избегай стен</strong> и собственного тела
-                    </div>
-                </div>
-            </div>
-    
-            <h3 style="color: #56c70a; margin-top: 20px;">📜 Основные правила:</h3>
-            <ul class="rules-list">
-                <li>★ Каждый фрукт увеличивает длину змейки</li>
-                <li>★ Чем длиннее змейка, тем выше сложность</li>
-                <li>★ Набери максимум очков и попади в топ!</li>
-            </ul>
-        </div>
-    </div>
+// Инициализация анимации при загрузке страницы
+document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(() => {
+        document.getElementById('menu').classList.add('show');
+    }, 100);
+});
 
-    <!-- Модальное окно для магазина -->
-    <div id="shop-modal" class="modal">
-        <div class="modal-content">
-            <span class="close-modal" onclick="closeModal('shop-modal')">&times;</span>
-            <h2>Магазин</h2>
-            <div class="shop-items">
-                <div class="shop-item">
-                    <h3>Фрукты</h3>
-                    <div class="fruit-options">
-                        <div class="fruit-option" onclick="selectFruit('apple')">
-                            <img src="../snake/Graphics/apple.png" alt="Яблоко">
-                            <span>Яблоко</span>
-                        </div>
-                        <div class="fruit-option" onclick="selectFruit('banana')">
-                            <img src="../snake/Graphics/banana.png" alt="Банан">
-                            <span>Банан</span>
-                        </div>
-                        <div class="fruit-option" onclick="selectFruit('lemon')">
-                            <img src="../snake/Graphics/lemon.png" alt="Лимон">
-                            <span>Лимон</span>
-                        </div>
-                        <div class="fruit-option" onclick="selectFruit('watermelon')">
-                            <img src="../snake/Graphics/watermelon.png" alt="Арбуз">
-                            <span>Арбуз</span>
-                        </div>
-                        <div class="fruit-option" onclick="selectFruit('pineapple')">
-                            <img src="../snake/Graphics/pineapple.png" alt="Ананас">
-                            <span>Ананас</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Модальное окно для таблицы лидеров -->
-    <div id="leaders-modal" class="modal">
-        <div class="modal-content">
-            <span class="close-modal" onclick="closeModal('leaders-modal')">&times;</span>
-            <h2>Таблица лидеров</h2>
-            <table id="leaderboard-table">
-                <thead>
-                    <tr>
-                        <th>Место</th>
-                        <th>Имя</th>
-                        <th>Счёт</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Строки таблицы будут добавлены JavaScript -->
-                </tbody>
-            </table>
-            <div id="leaderboard-error" class="error-message" style="display: none;"></div>
-        </div>
-    </div>
+function startGame() {
+    const playButton = document.getElementById('play-button');
+    const errorElement = document.getElementById('error-message');
     
-    <script src="menu.js"></script>
-</body>
-</html>
+    errorElement.style.display = 'none';
+    errorElement.textContent = '';
+    
+    playButton.textContent = 'Загрузка...';
+    playButton.disabled = true;
+    
+    fetch('../snake/game.html')
+        .then(response => {
+            if (!response.ok) throw new Error('Файл игры не найден');
+            
+            document.getElementById('menu').classList.remove('show');
+            document.getElementById('menu').classList.add('hide');
+            setTimeout(() => navigateTo("../snake/game.html"), 500);
+        })
+        .catch(error => {
+            errorElement.textContent = error.message;
+            errorElement.style.display = 'block';
+            playButton.textContent = 'Играть';
+            playButton.disabled = false;
+        });
+}
+
+function showInstructions() {
+    const modal = document.getElementById('instructions-modal');
+    modal.style.display = 'flex';
+    setTimeout(() => modal.classList.add('show'), 10);
+
+    // Анимация элементов
+    const elements = modal.querySelectorAll('.instruction-item, .rules-list li');
+    elements.forEach((el, index) => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateX(-30px)';
+        setTimeout(() => {
+            el.style.opacity = '1';
+            el.style.transform = 'translateX(0)';
+            el.style.transition = 'all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+        }, 200 + index * 80);
+    });
+}
+
+function showShop() {
+    const modal = document.getElementById('shop-modal');
+    modal.style.display = 'flex';
+    setTimeout(() => modal.classList.add('show'), 10);
+    
+    // Анимация фруктов
+    const fruits = document.querySelectorAll('.fruit-option');
+    fruits.forEach((fruit, index) => {
+        fruit.style.transitionDelay = `${index * 0.1}s`;
+    });
+}
+
+async function showLeaders() {
+    const modal = document.getElementById('leaders-modal');
+    modal.style.display = 'flex';
+    setTimeout(() => modal.classList.add('show'), 10);
+    
+    await fetchLeaderboard();
+    
+    // Анимация строк таблицы
+    const rows = document.querySelectorAll('#leaderboard-table tr');
+    rows.forEach((row, index) => {
+        row.style.transitionDelay = `${index * 0.1 + 0.2}s`;
+    });
+}
+
+async function fetchLeaderboard() {
+    const token = localStorage.getItem('token');
+    const tableBody = document.querySelector('#leaderboard-table tbody');
+    const errorElement = document.getElementById('leaderboard-error');
+
+    tableBody.innerHTML = '';
+    errorElement.style.display = 'none';
+    errorElement.textContent = '';
+
+    try {
+        const response = await fetch('http://localhost:5000/auth/leaderboard', {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(`Ошибка HTTP: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        if (data.length === 0) {
+            errorElement.textContent = 'Таблица лидеров пуста.';
+            errorElement.style.display = 'block';
+            return;
+        }
+        
+        const sortedData = data.sort((a, b) => b.score - a.score);
+        
+        sortedData.forEach((user, index) => {
+            const row = document.createElement('tr');
+            const place = index + 1;
+
+            // Ячейка для места
+            const rankCell = document.createElement('td');
+            rankCell.style.textAlign = 'center';
+            
+            if (place === 1) {
+                rankCell.innerHTML = '<img src="img/first.svg" alt="1st" width="30">';
+            } else if (place === 2) {
+                rankCell.innerHTML = '<img src="img/second.svg" alt="2nd" width="30">';
+            } else if (place === 3) {
+                rankCell.innerHTML = '<img src="img/third.svg" alt="3rd" width="30">';
+            } else {
+                rankCell.textContent = place;
+            }
+
+            // Ячейка имени (убрать медали отсюда)
+            const nameCell = document.createElement('td');
+            nameCell.textContent = user.username;
+
+            // Ячейка счета
+            const scoreCell = document.createElement('td');
+            scoreCell.textContent = user.score;
+
+            // Собираем строку
+            row.appendChild(rankCell);
+            row.appendChild(nameCell);
+            row.appendChild(scoreCell);
+            
+            tableBody.appendChild(row);
+        });
+
+    } catch (error) {
+        console.error('Ошибка при загрузке таблицы лидеров:', error);
+        errorElement.textContent = 'Не удалось загрузить таблицу лидеров.';
+        errorElement.style.display = 'block';
+    }
+}
+
+function getMedalAltText(index) {
+    switch (index) {
+        case 0: return "Gold Medal";
+        case 1: return "Silver Medal";
+        case 2: return "Bronze Medal";
+        default: return "";
+    }
+}
+
+function exitGame() {
+    if (confirm('Вы действительно хотите выйти в меню авторизации?')) {
+        // Анимация закрытия меню
+        const menu = document.getElementById('menu');
+        menu.classList.remove('show');
+        menu.classList.add('hide');
+        
+        // Анимация перехода
+        const transition = document.createElement('div');
+        transition.className = 'page-transition-exit';
+        document.body.appendChild(transition);
+        
+        // Задержка для анимации
+        setTimeout(() => {
+            navigateTo("login.html");
+            document.body.removeChild(transition);
+        }, 900);
+    }
+}
+
+function closeModal(modalId) {
+    const modal = document.getElementById(modalId);
+    modal.classList.remove('show');
+    
+    setTimeout(() => {
+        modal.style.display = 'none';
+        // Сброс анимаций
+        modal.querySelectorAll('*').forEach(el => {
+            el.style.transitionDelay = '';
+            el.style.opacity = '';
+            el.style.transform = '';
+        });
+    }, 500);
+}
+
+window.onclick = function(event) {
+    if (event.target.className === 'modal') {
+        event.target.style.display = 'none';
+    }
+}
+
+async function selectFruit(fruitType) {
+    const fruitImages = {
+        'apple': '../snake/Graphics/apple.png',
+        'banana': '../snake/Graphics/banana.png',
+        'lemon': '../snake/Graphics/lemon.png',
+        'watermelon': '../snake/Graphics/watermelon.png',
+        'pineapple': '../snake/Graphics/pineapple.png'
+    };
+
+    const fruitNames = {
+        'apple': 'Яблоко',
+        'banana': 'Банан',
+        'lemon': 'Лимон',
+        'watermelon': 'Арбуз',
+        'pineapple': 'Ананас'
+    };
+
+    const img = new Image();
+    img.src = fruitImages[fruitType];
+    
+    img.onerror = function() {
+        alert(`Ошибка загрузки изображения ${fruitNames[fruitType]}. Пожалуйста, выберите другой фрукт.`);
+        return;
+    };
+    
+    img.onload = async function() {
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                alert('Вы не авторизованы');
+                return;
+            }
+
+            const response = await fetch('http://localhost:5000/auth/update-fruit', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ fruitType })
+            });
+
+            if (!response.ok) {
+                throw new Error('Ошибка при обновлении фрукта');
+            }
+
+            alert(`Выбран фрукт: ${fruitNames[fruitType]}`);
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Произошла ошибка при сохранении выбранного фрукта');
+        }
+    };
+}

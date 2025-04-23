@@ -206,7 +206,7 @@ window.onclick = function(event) {
     }
 }
 
-function selectFruit(fruitType) {
+async function selectFruit(fruitType) {
     const fruitImages = {
         'apple': '../snake/Graphics/apple.png',
         'banana': '../snake/Graphics/banana.png',
@@ -231,8 +231,31 @@ function selectFruit(fruitType) {
         return;
     };
     
-    img.onload = function() {
-        localStorage.setItem('selectedFruit', fruitType);
-        alert(`Выбран фрукт: ${fruitNames[fruitType]}`);
+    img.onload = async function() {
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                alert('Вы не авторизованы');
+                return;
+            }
+
+            const response = await fetch('http://localhost:5000/auth/update-fruit', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ fruitType })
+            });
+
+            if (!response.ok) {
+                throw new Error('Ошибка при обновлении фрукта');
+            }
+
+            alert(`Выбран фрукт: ${fruitNames[fruitType]}`);
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Произошла ошибка при сохранении выбранного фрукта');
+        }
     };
 }

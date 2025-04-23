@@ -5,6 +5,7 @@ const User = new Schema({
     username: {type: String, unique: true, required: true},
     password: {type: String, required: true},
     score: {type: Number, default: 0, min: 0},
+    selectedFruit: {type: String, default: 'apple'},
     roles: [{type: String, ref: 'Role'}]
 })
 

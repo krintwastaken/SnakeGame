@@ -15,10 +15,13 @@ const font = new FontFace('Poetsen One', 'url(./Fonts/PoetsenOne-Regular.ttf)');
 // Графика
 const head_up_img = new Image();
 head_up_img.src = 'Graphics/head_up.png';
+
 const head_down_img = new Image();
 head_down_img.src = 'Graphics/head_down.png';
+
 const head_right_img = new Image();
 head_right_img.src = 'Graphics/head_right.png';
+
 const head_left_img = new Image();
 head_left_img.src = 'Graphics/head_left.png';
 
@@ -33,6 +36,7 @@ tail_left_img.src = 'Graphics/tail_left.png';
 
 const body_vertical_img = new Image();
 body_vertical_img.src = 'Graphics/body_vertical.png';
+
 const body_horizontal_img = new Image();
 body_horizontal_img.src = 'Graphics/body_horizontal.png';
 
@@ -289,9 +293,91 @@ class MAIN {
         this.currentScore = 0;
         this.totalScore = 0;
         
+        // Добавляем цветовые темы
+        this.themes = {
+            classic: {
+                grass: 'rgb(167, 208, 61)',
+                background: 'rgb(155, 195, 50)',
+                scoreBlock: 'rgb(167, 220, 61)'
+            },
+            desert: {
+                grass: 'rgb(238, 204, 164)',
+                background: 'rgb(216, 184, 146)',
+                scoreBlock: 'rgb(238, 204, 164)'
+            },
+            ocean: {
+                grass: 'rgb(100, 181, 246)',
+                background: 'rgb(79, 159, 223)',
+                scoreBlock: 'rgb(100, 181, 246)'
+            },
+            forest: {
+                grass: 'rgb(76, 175, 80)',
+                background: 'rgb(56, 142, 60)',
+                scoreBlock: 'rgb(76, 175, 80)'
+            }
+        };
+        
+        this.currentTheme = 'classic';
+        
         // Устанавливаем выбранный фрукт
-        const selectedFruit = localStorage.getItem('selectedFruit') || 'apple';
-        this.fruit.setFruitType(selectedFruit);
+        this.initializeFruit();
+        this.initializeTheme();
+    }
+
+    async initializeFruit() {
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                this.fruit.setFruitType('apple');
+                return;
+            }
+
+            const response = await fetch('http://localhost:5000/auth/get-fruit', {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to get selected fruit');
+            }
+
+            const data = await response.json();
+            this.fruit.setFruitType(data.selectedFruit);
+        } catch (error) {
+            console.error('Error getting selected fruit:', error);
+            this.fruit.setFruitType('apple');
+        }
+    }
+
+    async initializeTheme() {
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                return;
+            }
+
+            const response = await fetch('http://localhost:5000/auth/get-theme', {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to get selected theme');
+            }
+
+            const data = await response.json();
+            this.setTheme(data.selectedTheme);
+        } catch (error) {
+            console.error('Error getting selected theme:', error);
+        }
+    }
+
+    setTheme(themeName) {
+        if (this.themes[themeName]) {
+            this.currentTheme = themeName;
+        }
     }
 
     resetGame() {
@@ -301,8 +387,7 @@ class MAIN {
         this.getTotalScore();
         
         // Устанавливаем выбранный фрукт при сбросе игры
-        const selectedFruit = localStorage.getItem('selectedFruit') || 'apple';
-        this.fruit.setFruitType(selectedFruit);
+        this.initializeFruit();
     }
 
     async getTotalScore() {
@@ -415,9 +500,15 @@ class MAIN {
     }
 
     draw_grass() {
-        const grass_color = 'rgb(167, 208, 61)';
-        const bg_color = 'rgb(155, 195, 50)';
+        const theme = this.themes[this.currentTheme];
+        const grass_color = theme.grass;
+        const bg_color = theme.background;
 
+        // Заполняем фон
+        ctx.fillStyle = bg_color;
+        ctx.fillRect(0, 0, cell_size * cell_number, cell_size * cell_number);
+
+        // Рисуем траву
         for (let row = 0; row < cell_number; row++) {
             for (let col = 0; col < cell_number; col++) {
                 if ((row % 2 === 0 && col % 2 === 0) || (row % 2 !== 0 && col % 2 !== 0)) {
@@ -427,6 +518,7 @@ class MAIN {
             }
         }
 
+        // Рисуем нижнюю область
         ctx.fillStyle = bg_color;
         ctx.fillRect(0, cell_size * cell_number, cell_size * cell_number, cell_size * 2);
     }
@@ -442,8 +534,10 @@ class MAIN {
         const right_margin = 40;
         const text_color = '#000000';
         const score_area_height = cell_size * 2;
+        const block_color = this.themes[this.currentTheme].scoreBlock;
     
         // --- Текущий счет ---
+        ctx.font = '25px "Poetsen One", sans-serif';
         const score_width = ctx.measureText(score_text).width;
         const total_width = score_width + apple_size + padding * 3;
         const block_x = cell_size * cell_number - total_width - right_margin;
@@ -451,13 +545,12 @@ class MAIN {
     
         ctx.beginPath();
         ctx.roundRect(block_x, block_y, total_width, block_height, 8);
-        ctx.fillStyle = 'rgb(167, 220, 61)';
+        ctx.fillStyle = block_color;
         ctx.fill();
     
-        // Получаем текущий фрукт
-        const selectedFruit = localStorage.getItem('selectedFruit') || 'apple';
+        // Получаем текущий фрукт из объекта fruit
         let fruitImage;
-        switch(selectedFruit) {
+        switch(this.fruit.currentFruit) {
             case 'banana':
                 fruitImage = banana_img;
                 break;
@@ -475,19 +568,11 @@ class MAIN {
         }
     
         ctx.drawImage(fruitImage, block_x + padding, block_y + (block_height - apple_size) / 2, apple_size, apple_size);
+        
         ctx.fillStyle = text_color;
-    
-        ctx.font = '25px "Poetsen One"';
+        ctx.font = '25px "Poetsen One", sans-serif';
         ctx.textAlign = 'left';
         ctx.fillText(score_text, block_x + padding + apple_size + padding / 2, block_y + block_height - 8);
-    
-        ctx.font = '16px "Poetsen One"';
-        const current_score_label = "Current";
-        const current_score_label_width = ctx.measureText(current_score_label).width;
-        const current_score_label_x = block_x + (total_width - current_score_label_width) / 2;
-        const current_score_label_y = cell_size * cell_number + (score_area_height / 4) - 2.5;
-        ctx.fillStyle = text_color;
-        ctx.fillText(current_score_label, current_score_label_x, current_score_label_y);
     
         // --- Общий счет ---
         const total_score_width = ctx.measureText(total_score_text).width;
@@ -497,23 +582,15 @@ class MAIN {
     
         ctx.beginPath();
         ctx.roundRect(total_block_x, total_block_y, total_total_width + 10, block_height, 8);
-        ctx.fillStyle = 'rgb(167, 220, 61)';
+        ctx.fillStyle = block_color;
         ctx.fill();
     
         ctx.drawImage(fruitImage, total_block_x + padding, total_block_y + (block_height - apple_size) / 2, apple_size, apple_size);
+        
         ctx.fillStyle = text_color;
-    
-        ctx.font = '25px "Poetsen One"';
+        ctx.font = '25px "Poetsen One", sans-serif';
         ctx.textAlign = 'left';
         ctx.fillText(total_score_text, total_block_x + padding + apple_size + padding / 2, total_block_y + block_height - 8);
-    
-        ctx.font = '16px "Poetsen One"';
-        const total_score_label = "Total";
-        const total_score_label_width = ctx.measureText(total_score_label).width;
-        const total_score_label_x = total_block_x + (total_total_width - total_score_label_width) / 2;
-        const total_score_label_y = cell_size * cell_number + (score_area_height / 4) - 2.5;
-        ctx.fillStyle = text_color;
-        ctx.fillText(total_score_label, total_score_label_x, total_score_label_y);
     }
 }
 
