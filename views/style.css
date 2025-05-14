@@ -156,6 +156,7 @@ h1 {
 }
 
 .login-link {
+    margin-top: 10px;
     color: #FFFF00;
 }
 
@@ -678,7 +679,6 @@ h1 {
     }
 }
 
-/* Дополнительная анимация для кнопки выхода */
 #exit-button {
     position: relative;
     overflow: hidden;
@@ -746,7 +746,6 @@ h1 {
     font-weight: bold;
 }
 
-/* Специфичные анимации для магазина */
 .fruit-option {
     transform: scale(0);
     transition: all 0.3s ease;
@@ -756,7 +755,6 @@ h1 {
     transform: scale(1);
 }
 
-/* Для таблицы лидеров */
 #leaderboard-table tr {
     opacity: 0;
     transform: translateY(10px);
@@ -773,11 +771,66 @@ h1 {
 #leaderboard-table tr:nth-child(3) { transition-delay: 0.5s; }
 #leaderboard-table tr:nth-child(n+4) { transition-delay: 0.6s; }
 
-/* Улучшения для модальных окон */
 .modal-content {
     background: linear-gradient(160deg, #004d00 0%, #003300 100%);
     border: 2px solid #56c70a;
     box-shadow: 0 0 30px rgba(86, 199, 10, 0.3);
 }
 
-/* Стили для инструкции */
+#verificationCode {
+    letter-spacing: 10px;
+    font-size: 24px;
+    text-align: center;
+    padding: 10px;
+    width: 200px;
+}
+
+#resendCode {
+    color: #4CAF50;
+    text-decoration: none;
+    margin-top: 15px;
+    display: inline-block;
+}
+
+#resendCode:hover {
+    text-decoration: underline;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+    position: relative;
+}
+
+.form-group input.error {
+    border-color: #ff4d4d; /* Красная рамка */
+    box-shadow: 0 0 5px rgba(255, 0, 0, 0.3); /* Красная тень */
+}
+
+.error-container {
+    color: #ff4d4d; /* Красный цвет текста */
+    font-size: 0.8em;
+    margin-top: 5px;
+    text-align: left;
+}
+
+.error-message {
+    margin-bottom: 5px;
+}
+
+.error {
+    border-color: #ff4444 !important;
+    background-color: #fff9f9;
+}
+
+.global-error-message {
+    color: #ff4d4d;
+    margin-top: 10px;
+    text-align: center;
+    font-weight: bold;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
