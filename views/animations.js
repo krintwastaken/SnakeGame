@@ -7,7 +7,6 @@ function navigateTo(url) {
         document.body.removeChild(transition);
         window.location.href = url;
         
-        // Автоматическая активация анимации для game.html
         if(url.includes('game.html')) {
             setTimeout(() => {
                 document.querySelector('.game-container').classList.add('show');
@@ -19,7 +18,6 @@ function navigateTo(url) {
         document.querySelector('.game-container').classList.add('show');
     }
     
-    // Добавьте обработку выхода
     if(url.includes('menu.html')) {
         document.querySelector('.menu-container').classList.add('show');
     }

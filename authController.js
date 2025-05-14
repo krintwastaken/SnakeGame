@@ -173,7 +173,7 @@ class authController {
 
     async getLeaderboard(req, res) {
         try {
-            const users = await User.find({}, 'username score').sort({ score: -1 }).limit(10); // Выбираем только имя и счет, сортируем по убыванию счета, ограничиваем 10 пользователями
+            const users = await User.find({}, 'username score').sort({ score: -1 }).limit(10);
             res.json(users);
         } catch (error) {
             console.error(error);

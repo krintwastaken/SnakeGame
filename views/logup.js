@@ -16,7 +16,7 @@ document.getElementById('registrationForm').addEventListener('submit', function(
         return;
     }
 
-    fetch('http://localhost:5000/auth/registration', {
+    fetch('https://snakegame-6n0q.onrender.com/auth/registration', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -33,7 +33,6 @@ document.getElementById('registrationForm').addEventListener('submit', function(
     })
     .then(data => {
         alert('Регистрация успешна!');
-        // Анимация перехода
         document.querySelector('.container').classList.remove('show');
         document.querySelector('.container').classList.add('hide');
         setTimeout(() => navigateTo('login.html'), 500);

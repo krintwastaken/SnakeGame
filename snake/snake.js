@@ -321,7 +321,6 @@ class MAIN {
         
         // Устанавливаем выбранный фрукт
         this.initializeFruit();
-        this.initializeTheme();
     }
 
     async initializeFruit() {
@@ -332,7 +331,7 @@ class MAIN {
                 return;
             }
 
-            const response = await fetch('http://localhost:5000/auth/get-fruit', {
+            const response = await fetch('https://snakegame-6n0q.onrender.com/auth/get-fruit', {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -350,43 +349,12 @@ class MAIN {
         }
     }
 
-    async initializeTheme() {
-        try {
-            const token = localStorage.getItem('token');
-            if (!token) {
-                return;
-            }
-
-            const response = await fetch('http://localhost:5000/auth/get-theme', {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
-
-            if (!response.ok) {
-                throw new Error('Failed to get selected theme');
-            }
-
-            const data = await response.json();
-            this.setTheme(data.selectedTheme);
-        } catch (error) {
-            console.error('Error getting selected theme:', error);
-        }
-    }
-
-    setTheme(themeName) {
-        if (this.themes[themeName]) {
-            this.currentTheme = themeName;
-        }
-    }
-
     resetGame() {
         this.snake.reset();
         this.fruit.randomize(this.snake.body);
         this.currentScore = 0;
         this.getTotalScore();
         
-        // Устанавливаем выбранный фрукт при сбросе игры
         this.initializeFruit();
     }
 
@@ -398,7 +366,7 @@ class MAIN {
         }
 
         try {
-            const response = await fetch('http://localhost:5000/auth/score', {
+            const response = await fetch('https://snakegame-6n0q.onrender.com/auth/score', {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -477,7 +445,7 @@ class MAIN {
         }
 
         try {
-            const response = await fetch('http://localhost:5000/auth/update-score', {
+            const response = await fetch('https://snakegame-6n0q.onrender.com/auth/update-score', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -504,11 +472,9 @@ class MAIN {
         const grass_color = theme.grass;
         const bg_color = theme.background;
 
-        // Заполняем фон
         ctx.fillStyle = bg_color;
         ctx.fillRect(0, 0, cell_size * cell_number, cell_size * cell_number);
 
-        // Рисуем траву
         for (let row = 0; row < cell_number; row++) {
             for (let col = 0; col < cell_number; col++) {
                 if ((row % 2 === 0 && col % 2 === 0) || (row % 2 !== 0 && col % 2 !== 0)) {
@@ -518,7 +484,6 @@ class MAIN {
             }
         }
 
-        // Рисуем нижнюю область
         ctx.fillStyle = bg_color;
         ctx.fillRect(0, cell_size * cell_number, cell_size * cell_number, cell_size * 2);
     }
@@ -527,7 +492,6 @@ class MAIN {
         const score_text = String(this.currentScore);
         const total_score_text = String(this.totalScore);
     
-        // Общие параметры
         const apple_size = 30;
         const padding = 15;
         const block_height = 35;
@@ -536,7 +500,6 @@ class MAIN {
         const score_area_height = cell_size * 2;
         const block_color = this.themes[this.currentTheme].scoreBlock;
     
-        // --- Текущий счет ---
         ctx.font = '25px "Poetsen One", sans-serif';
         const score_width = ctx.measureText(score_text).width;
         const total_width = score_width + apple_size + padding * 3;
@@ -548,7 +511,6 @@ class MAIN {
         ctx.fillStyle = block_color;
         ctx.fill();
     
-        // Получаем текущий фрукт из объекта fruit
         let fruitImage;
         switch(this.fruit.currentFruit) {
             case 'banana':
@@ -574,7 +536,6 @@ class MAIN {
         ctx.textAlign = 'left';
         ctx.fillText(score_text, block_x + padding + apple_size + padding / 2, block_y + block_height - 8);
     
-        // --- Общий счет ---
         const total_score_width = ctx.measureText(total_score_text).width;
         const total_total_width = total_score_width + apple_size + padding * 3;
         const total_block_x = right_margin;
@@ -615,7 +576,6 @@ function draw() {
     main_game.draw_elements();
 }
 
-// Управление
 let current_head_position = main_game.snake.body[0];
 document.addEventListener('keydown', (event) => {
     if (event.key === 'ArrowUp') {

@@ -1,4 +1,3 @@
-// Добавляем функцию для навигации с анимацией
 function navigateTo(url) {
     const transition = document.createElement('div');
     transition.className = 'page-transition';
@@ -6,7 +5,6 @@ function navigateTo(url) {
     setTimeout(() => window.location.href = url, 1000);
 }
 
-// Инициализация анимации при загрузке страницы
 document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => {
         document.getElementById('menu').classList.add('show');
@@ -44,7 +42,6 @@ function showInstructions() {
     modal.style.display = 'flex';
     setTimeout(() => modal.classList.add('show'), 10);
 
-    // Анимация элементов
     const elements = modal.querySelectorAll('.instruction-item, .rules-list li');
     elements.forEach((el, index) => {
         el.style.opacity = '0';
@@ -62,7 +59,6 @@ function showShop() {
     modal.style.display = 'flex';
     setTimeout(() => modal.classList.add('show'), 10);
     
-    // Анимация фруктов
     const fruits = document.querySelectorAll('.fruit-option');
     fruits.forEach((fruit, index) => {
         fruit.style.transitionDelay = `${index * 0.1}s`;
@@ -76,7 +72,6 @@ async function showLeaders() {
     
     await fetchLeaderboard();
     
-    // Анимация строк таблицы
     const rows = document.querySelectorAll('#leaderboard-table tr');
     rows.forEach((row, index) => {
         row.style.transitionDelay = `${index * 0.1 + 0.2}s`;
@@ -93,7 +88,7 @@ async function fetchLeaderboard() {
     errorElement.textContent = '';
 
     try {
-        const response = await fetch('http://localhost:5000/auth/leaderboard', {
+        const response = await fetch('https://snakegame-6n0q.onrender.com/auth/leaderboard', {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -119,7 +114,6 @@ async function fetchLeaderboard() {
             const row = document.createElement('tr');
             const place = index + 1;
 
-            // Ячейка для места
             const rankCell = document.createElement('td');
             rankCell.style.textAlign = 'center';
             
@@ -133,15 +127,12 @@ async function fetchLeaderboard() {
                 rankCell.textContent = place;
             }
 
-            // Ячейка имени (убрать медали отсюда)
             const nameCell = document.createElement('td');
             nameCell.textContent = user.username;
 
-            // Ячейка счета
             const scoreCell = document.createElement('td');
             scoreCell.textContent = user.score;
 
-            // Собираем строку
             row.appendChild(rankCell);
             row.appendChild(nameCell);
             row.appendChild(scoreCell);
@@ -167,17 +158,14 @@ function getMedalAltText(index) {
 
 function exitGame() {
     if (confirm('Вы действительно хотите выйти в меню авторизации?')) {
-        // Анимация закрытия меню
         const menu = document.getElementById('menu');
         menu.classList.remove('show');
         menu.classList.add('hide');
         
-        // Анимация перехода
         const transition = document.createElement('div');
         transition.className = 'page-transition-exit';
         document.body.appendChild(transition);
         
-        // Задержка для анимации
         setTimeout(() => {
             navigateTo("login.html");
             document.body.removeChild(transition);
@@ -191,7 +179,6 @@ function closeModal(modalId) {
     
     setTimeout(() => {
         modal.style.display = 'none';
-        // Сброс анимаций
         modal.querySelectorAll('*').forEach(el => {
             el.style.transitionDelay = '';
             el.style.opacity = '';
@@ -239,7 +226,7 @@ async function selectFruit(fruitType) {
                 return;
             }
 
-            const response = await fetch('http://localhost:5000/auth/update-fruit', {
+            const response = await fetch('https://snakegame-6n0q.onrender.com/auth/update-fruit', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

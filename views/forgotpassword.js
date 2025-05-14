@@ -15,7 +15,7 @@ document.getElementById('resetPasswordForm').addEventListener('submit', function
         return;
     }
 
-    fetch('http://localhost:5000/auth/reset_password', {
+    fetch('https://snakegame-6n0q.onrender.com/auth/reset_password', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -32,7 +32,6 @@ document.getElementById('resetPasswordForm').addEventListener('submit', function
     })
     .then(data => {
         alert('Пароль сброшен!');
-        // Анимация перехода
         document.querySelector('.container').classList.remove('show');
         document.querySelector('.container').classList.add('hide');
         setTimeout(() => navigateTo('login.html'), 500);
