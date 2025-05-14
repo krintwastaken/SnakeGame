@@ -60,9 +60,9 @@ function exitGame() {
 
     setTimeout(() => {
         if (window.navigateTo) {
-            navigateTo("../views/menu.html");
+            navigateTo("../views/index.html");
         } else {
-            window.location.href = "../views/menu.html";
+            window.location.href = "../views/index.html";
         }
         document.body.removeChild(transition);
     }, 1000);
