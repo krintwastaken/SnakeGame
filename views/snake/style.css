@@ -1,0 +1,208 @@
+body {
+    margin: 0;
+    font-family: 'Poetsen One', cursive;
+    background: linear-gradient(to bottom, #56c70a, #3CB371);
+    background-repeat: repeat;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    color: white;
+    text-align: center;
+}
+
+.container {
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
+    width: 80%;
+    max-width: 650px;
+}
+
+h1 {
+    font-size: 30px;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+#gameCanvas {
+    background-color: #000;
+    border: 5px solid #fff;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+.controls {
+    margin-top: 10px;
+    padding: 5px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 5px;
+}
+
+.controls p {
+    font-size: 20px;
+}
+
+.top-left-corner {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.top-left-corner button {
+    background-color: rgba(255, 255, 255, 0.3);
+    color: white;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 16px;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+    cursor: pointer;
+    transition: background-color 0.4s, transform 0.3s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 80px;
+    height: 80px;
+}
+
+.top-left-corner button:hover {
+    background-color: rgba(255, 255, 255, 0.5);
+    transform: scale(1.05);
+}
+
+.top-left-corner button .material-icons {
+    font-size: 32px;
+}
+
+.slider-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    height: 56px;
+    width: 56px;
+    background-color: rgba(255, 255, 255, 0.3);
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    border-radius: 5px;
+    padding: 10px;
+    transition: height 0.3s, width 0.3s;
+    overflow: hidden;
+    position: relative;
+}
+
+.slider-container input {
+    appearance: none;
+    writing-mode: bt-lr;
+    -webkit-appearance: slider-vertical;
+    width: 5px;
+    height: 160px;
+    background: rgb(255, 255, 255);
+    border-radius: 5px;
+    outline: none;
+    opacity: 0;
+    transform: translateY(-80px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    position: absolute;
+    top: 100px;
+    left: 50%;
+    margin-left: -2.5px;
+    cursor: pointer;
+}
+
+.slider-container:hover input {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.slider-container input::-webkit-slider-thumb {
+    appearance: none;
+    width: 15px;
+    height: 15px;
+    background: rgb(0, 0, 0);
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.slider-container input::-moz-range-thumb {
+    width: 15px;
+    height: 15px;
+    background: rgb(0, 0, 0);
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.slider-container:hover {
+    height: 280px;
+    width: 56px;
+}
+
+.volume-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+    margin-bottom: 0;
+    margin-top: 0;
+    padding: 10px 0;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+}
+
+.volume-icon .material-icons {
+    font-size: 32px;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+}
+
+/* Анимации для страницы игры */
+.game-container {
+    transform: translateY(30px) scale(0.95);
+    opacity: 0;
+    transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.game-container.show {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+}
+
+/* Анимация закрытия игры */
+.game-container.hide {
+    transform: translateY(50px) scale(0.9) rotate(3deg);
+    opacity: 0;
+    filter: blur(8px);
+    transition: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.page-transition-exit {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #016901;
+    z-index: 9999;
+    clip-path: circle(0% at 50% 50%);
+    animation: exitTransition 1s ease-in-out;
+    pointer-events: none;
+}
+
+@keyframes exitTransition {
+    0% {
+        clip-path: circle(0% at 50% 50%);
+        opacity: 1;
+    }
+    50% {
+        clip-path: circle(100% at 50% 50%);
+        opacity: 0.9;
+    }
+    100% {
+        clip-path: circle(150% at 50% 50%);
+        opacity: 0;
+    }
+}

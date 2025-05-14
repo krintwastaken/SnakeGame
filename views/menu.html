@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Змейка - Меню</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container menu-container" id="menu">
+        <h1>Змейка</h1>
+        <button id="play-button" class="menu-button" onclick="startGame()">Играть</button>
+        <button id="instructions-button" class="menu-button" onclick="showInstructions()">Инструкция</button>
+        <button id="shop-button" class="menu-button" onclick="showShop()">Магазин</button>
+        <button id="leaders-button" class="menu-button" onclick="showLeaders()">Таблица лидеров</button>
+        <button id="exit-button" class="menu-button" onclick="exitGame()">Выход</button>
+        <div id="error-message" class="error-message"></div>
+    </div>
+
+    <!-- Модальное окно для инструкции -->
+    <div id="instructions-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('instructions-modal')">&times;</span>
+            <h2>Инструкция к игре "Змейка"</h2>
+            <p>Цель игры - управлять змейкой и собирать яблоки, чтобы увеличивать её длину.</p>
+            <h3>Управление:</h3>
+            <ul>
+                <li><strong>Стрелка вверх</strong> - движение вверх</li>
+                <li><strong>Стрелка вниз</strong> - движение вниз</li>
+                <li><strong>Стрелка влево</strong> - движение влево</li>
+                <li><strong>Стрелка вправо</strong> - движение вправо</li>
+            </ul>
+            <h3>Правила:</h3>
+            <ul>
+                <li>Каждое съеденное яблоко увеличивает длину змейки и даёт 1 очко</li>
+                <li>Не врезайтесь в стены и в собственное тело</li>
+                <li>Чем длиннее змейка, тем сложнее управление</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Модальное окно для магазина -->
+    <div id="shop-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('shop-modal')">&times;</span>
+            <h2>Магазин</h2>
+            <div class="shop-items">
+                <div class="shop-item">
+                    <h3>Фрукты</h3>
+                    <div class="fruit-options">
+                        <div class="fruit-option" onclick="selectFruit('apple')">
+                            <img src="snake/Graphics/apple.png" alt="Яблоко">
+                            <span>Яблоко</span>
+                        </div>
+                        <div class="fruit-option" onclick="selectFruit('banana')">
+                            <img src="snake/Graphics/banana.png" alt="Банан">
+                            <span>Банан</span>
+                        </div>
+                        <div class="fruit-option" onclick="selectFruit('lemon')">
+                            <img src="snake/Graphics/lemon.png" alt="Лимон">
+                            <span>Лимон</span>
+                        </div>
+                        <div class="fruit-option" onclick="selectFruit('watermelon')">
+                            <img src="snake/Graphics/watermelon.png" alt="Арбуз">
+                            <span>Арбуз</span>
+                        </div>
+                        <div class="fruit-option" onclick="selectFruit('pineapple')">
+                            <img src="snake/Graphics/pineapple.png" alt="Ананас">
+                            <span>Ананас</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно для таблицы лидеров -->
+    <div id="leaders-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('leaders-modal')">&times;</span>
+            <h2>Таблица лидеров</h2>
+            <table id="leaderboard-table">
+                <thead>
+                    <tr>
+                        <th>Имя</th>
+                        <th>Счёт</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Строки таблицы будут добавлены JavaScript -->
+                </tbody>
+            </table>
+            <div id="leaderboard-error" class="error-message" style="display: none;"></div>
+        </div>
+    </div>
+
+    <script src="menu.js"></script>
+</body>
+</html>

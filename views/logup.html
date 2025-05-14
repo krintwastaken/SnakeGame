@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <script src="animations.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Регистрация</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" 
+    integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" 
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+    <div class="container">
+        <h2>Регистрация</h2>
+        <form id="registrationForm">
+            <label for="username">Имя пользователя:</label>
+            <input type="text" id="username" name="username" required>
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+            <label for="password">Пароль:</label>
+            <div class="password-container">
+                <input type="password" id="password" name="password" required>
+                <i class="fas fa-eye" id="togglePassword" style="margin-left: -30px; cursor: pointer;"></i>
+            </div>
+            <label for="confirmPassword">Подтвердите пароль:</label>
+            <div class="password-container">
+                <input type="password" id="confirmPassword" name="confirmPassword" required>
+                <i class="fas fa-eye" id="toggleConfirmPassword" style="margin-left: -30px; cursor: pointer;"></i>
+            </div>
+            <div class="links">
+                <a href="index.html" class="login-link">Уже зарегистрированы?</a>
+            </div>
+            <button type="submit">Зарегистрироваться</button>
+            <div id="error-message" class="error-message"></div>
+        </form>
+    </div>
+    
+    <script src="logup.js"></script>
+    <script src="sneek.js"></script>
+</body>
+</html>
