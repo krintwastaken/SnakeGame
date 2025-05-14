@@ -331,7 +331,7 @@ class MAIN {
                 return;
             }
 
-            const response = await fetch('https://snakegame-6n0q.onrender.com:5000/auth/get-fruit', {
+            const response = await fetch('https://snakegame-6n0q.onrender.com/auth/get-fruit', {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -366,7 +366,7 @@ class MAIN {
         }
 
         try {
-            const response = await fetch('https://snakegame-6n0q.onrender.com:5000/auth/score', {
+            const response = await fetch('https://snakegame-6n0q.onrender.com/auth/score', {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -445,7 +445,7 @@ class MAIN {
         }
 
         try {
-            const response = await fetch('https://snakegame-6n0q.onrender.com:5000/auth/update-score', {
+            const response = await fetch('https://snakegame-6n0q.onrender.com/auth/update-score', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

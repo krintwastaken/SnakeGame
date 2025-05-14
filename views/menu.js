@@ -88,7 +88,7 @@ async function fetchLeaderboard() {
     errorElement.textContent = '';
 
     try {
-        const response = await fetch('https://snakegame-6n0q.onrender.com:5000/auth/leaderboard', {
+        const response = await fetch('https://snakegame-6n0q.onrender.com/auth/leaderboard', {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -226,7 +226,7 @@ async function selectFruit(fruitType) {
                 return;
             }
 
-            const response = await fetch('https://snakegame-6n0q.onrender.com:5000/auth/update-fruit', {
+            const response = await fetch('https://snakegame-6n0q.onrender.com/auth/update-fruit', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

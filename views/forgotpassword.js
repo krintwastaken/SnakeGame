@@ -15,7 +15,7 @@ document.getElementById('resetPasswordForm').addEventListener('submit', function
         return;
     }
 
-    fetch('https://snakegame-6n0q.onrender.com:5000/auth/reset_password', {
+    fetch('https://snakegame-6n0q.onrender.com/auth/reset_password', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'

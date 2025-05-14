@@ -14,7 +14,7 @@ document.getElementById('loginForm').addEventListener('submit', function(event) 
         return;
     }
 
-    fetch('https://snakegame-6n0q.onrender.com:5000/auth/login', {
+    fetch('https://snakegame-6n0q.onrender.com/auth/login', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
