@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken')
 const {secret} = require('../config')
-const User = require('../models/user');
+const User = require('./models/User');
 
 module.exports = async function (req, res, next) {
     if (req.method === "OPTIONS") {
