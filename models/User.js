@@ -9,7 +9,9 @@ const User = new Schema({
     roles: [{ type: String, ref: 'Role' }],
     isEmailVerified: { type: Boolean, default: false },
     emailVerificationCode: { type: String },
-    emailVerificationCodeExpires: { type: Date }
+    emailVerificationCodeExpires: { type: Date },
+    twoFactorSecret: { type: String },
+    isTwoFactorEnabled: { type: Boolean, default: false }
 });
 
 module.exports = model('User', User)

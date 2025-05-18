@@ -1,3 +1,4 @@
+
 function navigateTo(url) {
     const transition = document.createElement('div');
     transition.className = 'page-transition';
@@ -14,17 +15,17 @@ document.addEventListener('DOMContentLoaded', () => {
 function startGame() {
     const playButton = document.getElementById('play-button');
     const errorElement = document.getElementById('error-message');
-    
+
     errorElement.style.display = 'none';
     errorElement.textContent = '';
-    
+
     playButton.textContent = 'Загрузка...';
     playButton.disabled = true;
-    
+
     fetch('snake/game.html')
         .then(response => {
             if (!response.ok) throw new Error('Файл игры не найден');
-            
+
             document.getElementById('menu').classList.remove('show');
             document.getElementById('menu').classList.add('hide');
             setTimeout(() => navigateTo("snake/game.html"), 500);
@@ -58,7 +59,7 @@ function showShop() {
     const modal = document.getElementById('shop-modal');
     modal.style.display = 'flex';
     setTimeout(() => modal.classList.add('show'), 10);
-    
+
     const fruits = document.querySelectorAll('.fruit-option');
     fruits.forEach((fruit, index) => {
         fruit.style.transitionDelay = `${index * 0.1}s`;
@@ -69,9 +70,9 @@ async function showLeaders() {
     const modal = document.getElementById('leaders-modal');
     modal.style.display = 'flex';
     setTimeout(() => modal.classList.add('show'), 10);
-    
+
     await fetchLeaderboard();
-    
+
     const rows = document.querySelectorAll('#leaderboard-table tr');
     rows.forEach((row, index) => {
         row.style.transitionDelay = `${index * 0.1 + 0.2}s`;
@@ -88,8 +89,8 @@ async function fetchLeaderboard() {
     errorElement.textContent = '';
 
     try {
-        const response = await fetch('https://snakegame-6n0q.onrender.com/auth/leaderboard', {
-        //const response = await fetch('http://localhost:5000/auth/leaderboard', {
+        //const response = await fetch('https://snakegame-6n0q.onrender.com/auth/leaderboard', {
+        const response = await fetch('http://localhost:5000/auth/leaderboard', {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -108,16 +109,16 @@ async function fetchLeaderboard() {
             errorElement.style.display = 'block';
             return;
         }
-        
+
         const sortedData = data.sort((a, b) => b.score - a.score);
-        
+
         sortedData.forEach((user, index) => {
             const row = document.createElement('tr');
             const place = index + 1;
 
             const rankCell = document.createElement('td');
             rankCell.style.textAlign = 'center';
-            
+
             if (place === 1) {
                 rankCell.innerHTML = '<img src="img/first.svg" alt="1st" width="30">';
             } else if (place === 2) {
@@ -137,7 +138,7 @@ async function fetchLeaderboard() {
             row.appendChild(rankCell);
             row.appendChild(nameCell);
             row.appendChild(scoreCell);
-            
+
             tableBody.appendChild(row);
         });
 
@@ -162,11 +163,11 @@ function exitGame() {
         const menu = document.getElementById('menu');
         menu.classList.remove('show');
         menu.classList.add('hide');
-        
+
         const transition = document.createElement('div');
         transition.className = 'page-transition-exit';
         document.body.appendChild(transition);
-        
+
         setTimeout(() => {
             navigateTo("index.html");
             document.body.removeChild(transition);
@@ -177,7 +178,7 @@ function exitGame() {
 function closeModal(modalId) {
     const modal = document.getElementById(modalId);
     modal.classList.remove('show');
-    
+
     setTimeout(() => {
         modal.style.display = 'none';
         modal.querySelectorAll('*').forEach(el => {
@@ -213,12 +214,12 @@ async function selectFruit(fruitType) {
 
     const img = new Image();
     img.src = fruitImages[fruitType];
-    
+
     img.onerror = function() {
         alert(`Ошибка загрузки изображения ${fruitNames[fruitType]}. Пожалуйста, выберите другой фрукт.`);
         return;
     };
-    
+
     img.onload = async function() {
         try {
             const token = localStorage.getItem('token');
@@ -227,8 +228,8 @@ async function selectFruit(fruitType) {
                 return;
             }
 
-            const response = await fetch('https://snakegame-6n0q.onrender.com/auth/update-fruit', {
-            //const response = await fetch('http://localhost:5000/auth/update-fruit', {
+            //const response = await fetch('https://snakegame-6n0q.onrender.com/auth/update-fruit', {
+            const response = await fetch('http://localhost:5000/auth/update-fruit', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -247,4 +248,9 @@ async function selectFruit(fruitType) {
             alert('Произошла ошибка при сохранении выбранного фрукта');
         }
     };
+}
+
+// Добавим функцию для перехода на страницу profile.html
+function showProfile() {
+    navigateTo("profile.html");
 }

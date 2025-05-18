@@ -49,8 +49,7 @@ body_br_img.src = 'Graphics/body_br.png';
 const body_bl_img = new Image();
 body_bl_img.src = 'Graphics/body_bl.png';
 
-const apple_img = new Image();
-apple_img.src = 'Graphics/apple.png';
+
 
 const banana_img = new Image();
 banana_img.src = 'Graphics/banana.png';
@@ -58,6 +57,9 @@ banana_img.onerror = function() {
     console.error('Ошибка загрузки изображения банана');
     this.src = 'Graphics/apple.png';
 };
+
+const apple_img = new Image();
+apple_img.src = 'Graphics/apple.png';
 
 const lemon_img = new Image();
 lemon_img.src = 'Graphics/lemon.png';
@@ -355,7 +357,6 @@ class MAIN {
         this.fruit.randomize(this.snake.body);
         this.currentScore = 0;
         this.getTotalScore();
-        
         this.initializeFruit();
     }
 

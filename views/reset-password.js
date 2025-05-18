@@ -31,7 +31,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         try {
-            const response = await fetch('https://snakegame-6n0q.onrender.com/auth/reset-password-with-token', {
+            const response = await fetch('http://localhost:5000/auth/reset-password-with-token', {
+            //const response = await fetch('https://snakegame-6n0q.onrender.com/auth/reset-password-with-token', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

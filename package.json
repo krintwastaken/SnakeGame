@@ -20,6 +20,8 @@
     "mongoose": "^8.12.1",
     "nodemailer": "^6.10.1",
     "nodemon": "^3.1.10",
+    "qrcode": "^1.5.4",
+    "speakeasy": "^2.0.0",
     "unisender": "^1.1.1",
     "uuid": "^11.1.0"
   }
