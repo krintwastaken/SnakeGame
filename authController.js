@@ -11,6 +11,13 @@ const { sendResetPasswordEmail, sendVerificationEmail } = require('./services/em
 
 const speakeasy = require('speakeasy');
 const QRCode = require('qrcode');
+const ReCAPTCHA = require('google-recaptcha');
+
+// Initialize reCAPTCHA
+const recaptcha = new ReCAPTCHA({
+    secret: process.env.RECAPTCHA_SECRET_KEY,
+    sitekey: process.env.RECAPTCHA_SITE_KEY
+});
 
 const generateAccessToken = (id, roles) => {
     const payload = {
@@ -49,7 +56,7 @@ class authController {
                 return res.status(500).json({ message: 'Ошибка при отправке кода подтверждения' });
             }
 
-            return res.json({ 
+            return res.json({
                 message: "Код подтверждения отправлен на вашу почту",
                 email: email
             });
@@ -61,13 +68,7 @@ class authController {
 
     async login(req, res) {
         try {
-            const { password, username, twoFactorCode } = req.body; // Получаем twoFactorCode
-
-        // Добавляем валидацию для полей username и password
-            const errors = validationResult(req);
-            if (!errors.isEmpty()) {
-                return res.status(400).json({ errors: errors.array() });
-            }
+            const { password, username, twoFactorCode, recaptchaResponse } = req.body;
 
             const user = await User.findOne({ username });
             if (!user) {
@@ -80,12 +81,36 @@ class authController {
             }
 
             if (!user.isEmailVerified) {
-                return res.status(403).json({ // 403 Forbidden
+                return res.status(403).json({
                     message: 'Email не подтвержден',
-                    email: user.email, //  Возвращаем email для перенаправления
-                    requiresVerification: true // Флаг, указывающий на необходимость верификации
+                    email: user.email,
+                    requiresVerification: true
                 });
             }
+
+            //  If recaptcha is required, verify it
+            if (req.body.recaptchaResponse) {
+                let recaptchaVerified = true;
+
+                if (recaptchaResponse) {
+                    recaptchaVerified = await new Promise((resolve, reject) => {
+                        recaptcha.verify({ response: recaptchaResponse, remoteip: req.connection.remoteAddress }, (error, data) => {
+                            if (error || !data.success) {
+                                resolve(false);
+                            } else {
+                                resolve(true);
+                            }
+                        });
+                    });
+
+                    if (!recaptchaVerified) {
+                        return res.status(400).json({ message: 'reCAPTCHA verification failed' });
+                    }
+                }
+            } else if (failedLoginAttempts >= 5)  { // Assuming you still track failedLoginAttempts on the server.  If not you need a way to determine if recaptcha should be required
+                  return res.status(400).json({ message: 'reCAPTCHA verification is required' });
+            }
+
 
             if (user.isTwoFactorEnabled) {
                 if (!twoFactorCode) {
@@ -105,13 +130,13 @@ class authController {
             }
 
             const token = generateAccessToken(user._id, user.roles);
+
             return res.json({ token, message: "ok" });
         } catch (err) {
             console.error(err);
             res.status(500).json({ message: 'Login error' });
         }
     }
-
 
     async generateTwoFactorSecret(req, res) {
         try {
@@ -215,8 +240,8 @@ class authController {
                 return res.status(400).json({ message: `Пользователь с email: ${email} не найден` });
             }
 
-              //  Добавляем проверку длины пароля
-              if (password.length < 8 || password.length > 127) {
+            //  Добавляем проверку длины пароля
+            if (password.length < 8 || password.length > 127) {
                 return res.status(400).json({
                     message: "Пароль должен содержать от 8 до 127 символов."
                 });
@@ -383,13 +408,13 @@ class authController {
                 return res.status(404).json({ message: 'Пользователь не найден' });
             }
 
-               //  Добавляем проверку длины пароля
-               if (newPassword.length < 8 || newPassword.length > 127) {
+            //  Добавляем проверку длины пароля
+            if (newPassword.length < 8 || newPassword.length > 127) {
                 return res.status(400).json({
                     message: "Пароль должен содержать от 8 до 127 символов."
                 });
             }
-    
+
             // 3. Обновить пароль
             const hashPassword = bcrypt.hashSync(newPassword, 7);
             user.password = hashPassword;

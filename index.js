@@ -1,11 +1,11 @@
-require('dotenv').config();
-const path = require('path');
 const express = require('express');
+const session = require('express-session');
 const mongoose = require('mongoose');
 const authRouter = require('./authRouter');
 const cors = require('cors');
-const PORT = process.env.PORT;
+const path = require('path');
 
+const PORT = process.env.PORT || 5000;
 const app = express();
 
 app.use(cors({
@@ -13,6 +13,17 @@ app.use(cors({
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true
 }));
+
+app.use(session({
+    secret: process.env.SESSION_SECRET || 'your_secret_key',
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+        secure: false,
+        maxAge: 5 * 60 * 1000,
+    }
+}));
+
 app.use(express.json());
 app.use("/auth", authRouter);
 app.use(express.static(path.join(__dirname, 'views')));

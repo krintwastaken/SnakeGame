@@ -49,8 +49,6 @@ body_br_img.src = 'Graphics/body_br.png';
 const body_bl_img = new Image();
 body_bl_img.src = 'Graphics/body_bl.png';
 
-
-
 const banana_img = new Image();
 banana_img.src = 'Graphics/banana.png';
 banana_img.onerror = function() {
