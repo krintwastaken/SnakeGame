@@ -10,17 +10,25 @@ document.addEventListener('DOMContentLoaded', () => {
         clearErrors();
 
         const username = document.getElementById('username').value.trim();
-        const password = document.getElementById('password').value;
+        const password = document.getElementById('password').value; // Получаем пароль
 
         try {
-            const response = await fetch('http://localhost:5000/auth/login', {
             //const response = await fetch('https://snakegame-6n0q.onrender.com/auth/login', {
+            const response = await fetch('http://localhost:5000/auth/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({ password, username })
             });
+
+            if (response.status === 403) {
+                // Сохраняем имя пользователя и пароль в localStorage
+                localStorage.setItem('pendingUsername', username);
+                localStorage.setItem('pendingPassword', password); // Сохраняем пароль
+                window.location.href = 'two-factor-verify.html';
+                return;
+            }
 
             if (!response.ok) {
                 const errorData = await response.json();

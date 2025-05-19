@@ -59,10 +59,15 @@ class authController {
         }
     }
 
-
-     async login(req, res) {
+    async login(req, res) {
         try {
-            const { password, username } = req.body;
+            const { password, username, twoFactorCode } = req.body; // Получаем twoFactorCode
+
+        // Добавляем валидацию для полей username и password
+            const errors = validationResult(req);
+            if (!errors.isEmpty()) {
+                return res.status(400).json({ errors: errors.array() });
+            }
 
             const user = await User.findOne({ username });
             if (!user) {
@@ -80,6 +85,23 @@ class authController {
                     email: user.email, //  Возвращаем email для перенаправления
                     requiresVerification: true // Флаг, указывающий на необходимость верификации
                 });
+            }
+
+            if (user.isTwoFactorEnabled) {
+                if (!twoFactorCode) {
+                    return res.status(403).json({ message: 'Требуется код двухфакторной аутентификации' });
+                }
+
+                const verified = speakeasy.totp.verify({
+                    secret: user.twoFactorSecret,
+                    encoding: 'base32',
+                    token: twoFactorCode,
+                    window: 2
+                });
+
+                if (!verified) {
+                    return res.status(400).json({ message: 'Неверный код двухфакторной аутентификации' });
+                }
             }
 
             const token = generateAccessToken(user._id, user.roles);

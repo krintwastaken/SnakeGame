@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('DOM fully loaded');
     const container = document.querySelector('.container');
     container.classList.add('show');
 

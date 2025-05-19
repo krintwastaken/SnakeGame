@@ -28,16 +28,16 @@
                 <p>Или введите этот секретный ключ: <span id="secret-key"></span></p>
                 <label for="verification-code">Код подтверждения:</label>
                 <input type="text" id="verification-code">
-                <button id="enable-2fa">Включить 2FA</button>
+                <button id="enable-2fa" class="menu-button">Включить 2FA</button>
             </div>
 
-            <button id="generate-qr-code">Настроить 2FA</button>
-            <button id="disable-2fa" style="display: none;">Выключить 2FA</button>
+            <button id="generate-qr-code" class="menu-button">Настроить 2FA</button>
+            <button id="disable-2fa" class="menu-button" style="display: none;">Выключить 2FA</button>
             <div id="error-message" class="error-message"></div>
             <div id="success-message" class="success-message"></div>
         </div>
-
-        <button id="logout-button">Выйти</button>
+        <button id="menu-button" class="menu-button">В меню</button>
+        <button id="exit-button" class="menu-button">Выйти</button>
     </div>
     <script src="profile.js"></script>
 </body>

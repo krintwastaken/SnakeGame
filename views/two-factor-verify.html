@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Подтверждение 2FA</title>
+    <link rel="icon" href="img/game.png" type="image/png">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Подтверждение двухфакторной аутентификации</h2>
+        <form id="twoFactorForm">
+            <label for="twoFactorCode">Код 2FA:</label>
+            <input type="text" id="twoFactorCode" name="twoFactorCode" required>
+            <button type="submit">Подтвердить</button>
+        </form>
+        <div class="notification-container"></div>
+    </div>
+    <script src="two-factor-verify.js"></script>
+</body>
+</html>

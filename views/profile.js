@@ -1,19 +1,11 @@
 
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('profile.js loaded');
-
-    // Добавляем класс 'show' к контейнеру
     const container = document.querySelector('.container');
     if (container) {
         container.classList.add('show');
-        console.log('.container получил класс .show');
-    } else {
-        console.error('Элемент .container не найден!');
     }
 
-    const usernameSpan = document.getElementById('username');
-    console.log('usernameSpan:', usernameSpan);
-
+    const usernameSpan = document.getElementById('username');    
     const emailSpan = document.getElementById('email');
     const twoFactorEnabledSpan = document.getElementById('two-factor-enabled');
     const twoFactorSetupDiv = document.getElementById('two-factor-setup');
@@ -177,6 +169,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Функция для выхода из аккаунта
     function logout() {
+        localStorage.removeItem('token');
+        window.location.href = 'index.html';
+    }
+
+    // Функция для перехода в меню
+    function goToMenu() {
         window.location.href = 'menu.html';
     }
 
@@ -184,7 +182,9 @@ document.addEventListener('DOMContentLoaded', () => {
     generateQrCodeButton.addEventListener('click', generateQrCode);
     enable2faButton.addEventListener('click', enableTwoFactor);
     disable2faButton.addEventListener('click', disableTwoFactor);
-    document.getElementById('logout-button').addEventListener('click', logout);
+    document.getElementById('exit-button').addEventListener('click', logout);
+    //Добавим кнопку для выхода на страницу menu.html
+    document.getElementById('menu-button').addEventListener('click', goToMenu);
 
     // Загрузка данных профиля при загрузке страницы
     fetchProfileData();
