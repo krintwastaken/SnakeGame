@@ -1,3 +1,8 @@
+document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(() => {
+        document.querySelector('.container').classList.add('show');
+    }, 100);});
+
 function navigateTo(url) {
     const transition = document.createElement('div');
     transition.className = 'page-transition';

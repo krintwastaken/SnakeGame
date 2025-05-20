@@ -14,7 +14,6 @@ module.exports = async function (req, res, next) {
         }
         const decodedData = jwt.verify(token, secret);
     
-        // Проверяем, подтвержден ли email
         const user = await User.findById(decodedData.id);
     if (!user.isEmailVerified) {
         return res.status(403).json({message: "Email не подтвержден"});

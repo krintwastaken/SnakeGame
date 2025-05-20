@@ -10,7 +10,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
           integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
           crossorigin="anonymous" referrerpolicy="no-referrer"/>
-    <script src="https://www.google.com/recaptcha/api.js?render=explicit" async defer></script>
 </head>
 <body>
     <div class="container">
@@ -33,21 +32,9 @@
                     <a href="logup.html" class="login-link">Зарегистрироваться</a>
                 </div>
             </div>
-            
-            <div id="recaptcha-container" style="margin-top: 10px; display: none;"></div>
-
             <button type="submit">Войти</button>
         </form>
     </div>
-
-    <div id="recaptcha-modal" class="modal">
-        <div class="modal-content">
-            <span class="close-modal" onclick="hideModal()">&times;</span>
-            <p>Для продолжения, пожалуйста, пройдите проверку reCAPTCHA:</p>
-            <div id="recaptcha-container-modal" class="g-recaptcha" style="display: none;"></div>
-        </div>
-    </div>
-
     <div class="notification-container"></div>
 
     <script src="index.js"></script>

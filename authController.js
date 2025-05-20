@@ -13,7 +13,6 @@ const speakeasy = require('speakeasy');
 const QRCode = require('qrcode');
 const ReCAPTCHA = require('google-recaptcha');
 
-// Initialize reCAPTCHA
 const recaptcha = new ReCAPTCHA({
     secret: process.env.RECAPTCHA_SECRET_KEY,
     sitekey: process.env.RECAPTCHA_SITE_KEY
@@ -68,16 +67,12 @@ class authController {
 
     async login(req, res) {
         try {
-            const { password, username, twoFactorCode, recaptchaResponse } = req.body;
+            const { password, username, twoFactorCode } = req.body;
 
             const user = await User.findOne({ username });
-            if (!user) {
-                return res.status(400).json({ message: `Пользователь с именем: ${username} не найден` });
-            }
-
             const validPassword = bcrypt.compareSync(password, user.password);
-            if (!validPassword) {
-                return res.status(400).json({ message: `Введен неверный пароль` });
+            if (!validPassword || !user) {
+                return res.status(400).json({ message: `Неверный логин или пароль` });
             }
 
             if (!user.isEmailVerified) {
@@ -87,30 +82,6 @@ class authController {
                     requiresVerification: true
                 });
             }
-
-            //  If recaptcha is required, verify it
-            if (req.body.recaptchaResponse) {
-                let recaptchaVerified = true;
-
-                if (recaptchaResponse) {
-                    recaptchaVerified = await new Promise((resolve, reject) => {
-                        recaptcha.verify({ response: recaptchaResponse, remoteip: req.connection.remoteAddress }, (error, data) => {
-                            if (error || !data.success) {
-                                resolve(false);
-                            } else {
-                                resolve(true);
-                            }
-                        });
-                    });
-
-                    if (!recaptchaVerified) {
-                        return res.status(400).json({ message: 'reCAPTCHA verification failed' });
-                    }
-                }
-            } else if (failedLoginAttempts >= 5)  { // Assuming you still track failedLoginAttempts on the server.  If not you need a way to determine if recaptcha should be required
-                  return res.status(400).json({ message: 'reCAPTCHA verification is required' });
-            }
-
 
             if (user.isTwoFactorEnabled) {
                 if (!twoFactorCode) {
@@ -131,10 +102,10 @@ class authController {
 
             const token = generateAccessToken(user._id, user.roles);
 
-            return res.json({ token, message: "ok" });
+            return res.json({ token });
         } catch (err) {
             console.error(err);
-            res.status(500).json({ message: 'Login error' });
+            res.status(500).json({ message: 'Ошибка входа' });
         }
     }
 
@@ -144,7 +115,7 @@ class authController {
             const user = await User.findById(userId);
 
             if (!user) {
-                return res.status(404).json({ message: 'User not found' });
+                return res.status(404).json({ message: 'Пользователь не найден' });
             }
 
             const secret = speakeasy.generateSecret({ length: 20 });
@@ -174,14 +145,14 @@ class authController {
 
             const user = await User.findById(userId);
             if (!user) {
-                return res.status(404).json({ message: 'User not found' });
+                return res.status(404).json({ message: 'Пользователь не найден' });
             }
 
             const verified = speakeasy.totp.verify({
                 secret: secret,
                 encoding: 'base32',
                 token: token,
-                window: 2  // Проверка в пределах двух временных окон (60 секунд)
+                window: 2
             });
 
             if (!verified) {
@@ -206,7 +177,7 @@ class authController {
             const user = await User.findById(userId);
 
             if (!user) {
-                return res.status(404).json({ message: 'User not found' });
+                return res.status(404).json({ message: 'Пользователь не найден' });
             }
 
             user.twoFactorSecret = undefined;
@@ -240,7 +211,6 @@ class authController {
                 return res.status(400).json({ message: `Пользователь с email: ${email} не найден` });
             }
 
-            //  Добавляем проверку длины пароля
             if (password.length < 8 || password.length > 127) {
                 return res.status(400).json({
                     message: "Пароль должен содержать от 8 до 127 символов."
@@ -266,16 +236,16 @@ class authController {
 
             const user = await User.findById(userId);
             if (!user) {
-                return res.status(404).json({ message: 'User not found' });
+                return res.status(404).json({ message: 'Пользователь не найден' });
             }
 
             user.score += scoreIncrement;
             await user.save();
 
-            return res.json({ message: 'Score updated successfully', newScore: user.score });
+            return res.json({ message: 'Счёт обновлен', newScore: user.score });
         } catch (error) {
             console.error(error);
-            return res.status(500).json({ message: 'Failed to update score' });
+            return res.status(500).json({ message: 'Ошибка обновления счёта' });
         }
     }
 
@@ -286,16 +256,16 @@ class authController {
 
             const user = await User.findById(userId);
             if (!user) {
-                return res.status(404).json({ message: 'User not found' });
+                return res.status(404).json({ message: 'Пользователь не найден' });
             }
 
             user.selectedFruit = fruitType;
             await user.save();
 
-            return res.json({ message: 'Fruit updated successfully', selectedFruit: user.selectedFruit });
+            return res.json({ message: 'Выбор обновлен', selectedFruit: user.selectedFruit });
         } catch (error) {
             console.error(error);
-            return res.status(500).json({ message: 'Failed to update fruit' });
+            return res.status(500).json({ message: 'Ошибка обновления выбора' });
         }
     }
 
@@ -305,13 +275,13 @@ class authController {
             const user = await User.findById(userId);
 
             if (!user) {
-                return res.status(404).json({ message: 'User not found' });
+                return res.status(404).json({ message: 'Пользователь не найден' });
             }
 
             return res.json({ selectedFruit: user.selectedFruit });
         } catch (error) {
             console.error(error);
-            return res.status(500).json({ message: 'Failed to get selected fruit' });
+            return res.status(500).json({ message: 'Ошибка выбора фрукта' });
         }
     }
 
@@ -321,13 +291,13 @@ class authController {
             const user = await User.findById(userId);
 
             if (!user) {
-                return res.status(404).json({ message: 'User not found' });
+                return res.status(404).json({ message: 'Пользователь не найден' });
             }
 
             return res.json({ score: user.score });
         } catch (error) {
             console.error(error);
-            return res.status(500).json({ message: 'Failed to get score' });
+            return res.status(500).json({ message: 'Ошибка получения счёта' });
         }
     }
 
@@ -337,7 +307,7 @@ class authController {
             res.json(users);
         } catch (error) {
             console.error(error);
-            res.status(500).json({ message: 'Failed to fetch leaderboard' });
+            res.status(500).json({ message: 'Ошибка таблицы' });
         }
     }
 
@@ -350,10 +320,8 @@ class authController {
                 return res.status(404).json({ message: 'Пользователь с таким email не найден' });
             }
 
-            // Удаляем старые токены для этого пользователя
             await ResetToken.deleteMany({ userId: user._id });
 
-            // Создаем новый токен
             const token = uuidv4();
             const resetToken = new ResetToken({
                 userId: user._id,
@@ -361,7 +329,6 @@ class authController {
             });
             await resetToken.save();
 
-            // Отправляем email
             const emailSent = await sendResetPasswordEmail(email, token);
             if (!emailSent) {
                 return res.status(500).json({ message: 'Ошибка при отправке email' });
@@ -394,7 +361,6 @@ class authController {
         try {
             const { token, newPassword } = req.body;
 
-            // 1. Найти токен в базе
             const resetToken = await ResetToken.findOne({ token });
             if (!resetToken) {
                 return res.status(400).json({
@@ -402,25 +368,21 @@ class authController {
                 });
             }
 
-            // 2. Найти пользователя
             const user = await User.findById(resetToken.userId);
             if (!user) {
                 return res.status(404).json({ message: 'Пользователь не найден' });
             }
 
-            //  Добавляем проверку длины пароля
             if (newPassword.length < 8 || newPassword.length > 127) {
                 return res.status(400).json({
                     message: "Пароль должен содержать от 8 до 127 символов."
                 });
             }
 
-            // 3. Обновить пароль
             const hashPassword = bcrypt.hashSync(newPassword, 7);
             user.password = hashPassword;
             await user.save();
 
-            // 4. Удалить использованный токен
             await ResetToken.deleteOne({ _id: resetToken._id });
 
             return res.json({ message: 'Пароль успешно изменен' });
@@ -504,7 +466,6 @@ class authController {
                 return res.status(404).json({ message: 'User not found' });
             }
 
-            // Отправляем только нужные данные
             return res.json({
                 username: user.username,
                 email: user.email,

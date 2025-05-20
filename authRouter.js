@@ -6,6 +6,7 @@ const { check, validationResult } = require("express-validator");
 const authMiddleware = require('./middleware/authMiddleware');
 const roleMiddleware = require('./middleware/roleMiddleware');
 const path = require('path');
+const loginLimiter = require('./middleware/rateLimitMiddleware');
 
 const validate = (req, res, next) => {
     const errors = validationResult(req);
@@ -38,12 +39,12 @@ router.post('/registration', [
 
 router.get('/profile', authMiddleware, controller.getProfile);
 
-router.post('/login', [
+router.post('/login', loginLimiter, [
     check('username', "Пустое содержимое").notEmpty(),
     check('password', "Пустое содержимое").notEmpty(),
 ], controller.login);
 
-// 2FA Routes
+
 router.get('/two-factor/generate', authMiddleware, controller.generateTwoFactorSecret);
 router.post('/two-factor/enable', authMiddleware, controller.enableTwoFactorAuth);
 router.post('/two-factor/disable', authMiddleware, controller.disableTwoFactorAuth);
@@ -68,7 +69,6 @@ router.get('/verify-reset-token', controller.verifyResetToken);
 router.post('/verify-email', controller.verifyEmail);
 router.post('/resend-verification', controller.resendVerification);
 
-// New endpoint to get the reCAPTCHA site key
 router.get('/recaptcha-site-key', (req, res) => {
     res.json({ siteKey: process.env.RECAPTCHA_SITE_KEY });
 });
