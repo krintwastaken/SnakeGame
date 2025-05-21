@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SnakeGame</title>
+    <link rel="icon" href="../img/game.png" type="image/png">
     <link rel="stylesheet" href="style.css">
     <link rel="preload" href="./Fonts/PoetsenOne-Regular.ttf" as="font" type="font/ttf" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -23,6 +24,24 @@
     </div>
     <div class="container game-container">
         <canvas id="gameCanvas"></canvas>
+    </div>
+
+    <!-- Модальное окно при первом запуске -->
+    <div id="welcomeModal" class="modal">
+        <div class="modal-content">
+            <h2>Добро пожаловать в Змейку!</h2>
+            <p>Используйте стрелки для управления змейкой.</p>
+            <button id="startGameButton">Начать игру</button>
+        </div>
+    </div>
+
+    <!-- Модальное окно Game Over -->
+    <div id="gameOverModal" class="modal">
+        <div class="modal-content">
+            <h2>Игра окончена!</h2>
+            <p id="gameOverStats">Здесь будет статистика.</p>
+            <button id="restartButton">Играть снова</button>
+        </div>
     </div>
 
     <script src="snake.js"></script>

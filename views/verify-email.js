@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const code = document.getElementById('verificationCode').value;
 
         try {
+            //const response = await fetch('http://localhost:5000/auth/verify-email', {
             const response = await fetch('https://snakegame-6n0q.onrender.com/auth/verify-email', {
                 method: 'POST',
                 headers: {
@@ -34,6 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('resendCode').addEventListener('click', async function(e) {
         e.preventDefault();
         try {
+            //const response = await fetch('http://localhost:5000/auth/resend-verification', {
             const response = await fetch('https://snakegame-6n0q.onrender.com/auth/resend-verification', {
                 method: 'POST',
                 headers: {

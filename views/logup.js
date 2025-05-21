@@ -2,12 +2,9 @@
 document.addEventListener('DOMContentLoaded', () => {
     const container = document.querySelector('.container');
     container.classList.add('show');
+    const notificationContainer = document.querySelector('.notification-container');
 
-    // Добавляем валидацию в реальном времени
-    document.getElementById('password').addEventListener('input', validatePassword);
-    document.getElementById('confirmPassword').addEventListener('input', validatePasswordMatch);
-
-    document.getElementById('registrationForm').addEventListener('submit', async function(event) {
+    document.getElementById('registrationForm').addEventListener('submit', async function (event) {
         event.preventDefault();
 
         // Очищаем предыдущие ошибки
@@ -31,69 +28,73 @@ document.addEventListener('DOMContentLoaded', () => {
             isValid = false;
         }
 
-        if (password.length < 5 || password.length > 12) {
-            showError('password', 'Пароль должен быть от 5 до 12 символов');
-            isValid = false;
-        }
-
-        if (password !== confirmPassword) {
-            showError('confirmPassword', 'Пароли не совпадают');
-            isValid = false;
-        }
-
         if (!isValid) return;
 
+
         try {
+            //const response = await fetch('http://localhost:5000/auth/registration', {
             const response = await fetch('https://snakegame-6n0q.onrender.com/auth/registration', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ username, email, password })
+                body: JSON.stringify({username, email, password, confirmPassword})
             });
 
             if (!response.ok) {
                 const errorData = await response.json();
-                throw new Error(errorData.message || 'Ошибка регистрации');
+                //Отображаем ошибки валидации с сервера
+                if (errorData.errors) {
+                    errorData.errors.forEach(error => {
+                        if (error.path === 'username') {
+                            showError('username', error.msg);
+                            showNotification(error.msg, 'error');
+                        } else if (error.path === 'email') {
+                            showError('email', error.msg);
+                            showNotification(error.msg, 'error');
+                        } else if (error.path === 'password') {
+                            showError('password', error.msg);
+                            showNotification(error.msg, 'error');
+                        } else if (error.path === 'confirmPassword') {
+                            showError('confirmPassword', error.msg);
+                            showNotification(error.msg, 'error');
+                        } else {
+                            showGlobalError(error.msg);
+                            showNotification(error.msg, 'error');
+                        }
+                    });
+                } else {
+                    // Отображаем общую ошибку, если нет детальной информации
+                    showGlobalError(errorData.message || 'Ошибка регистрации');
+                    showNotification(errorData.message || 'Ошибка регистрации', 'error');
+                }
+                return;
             }
 
             const data = await response.json();
             document.querySelector('.container').classList.remove('show');
             document.querySelector('.container').classList.add('hide');
+            showNotification('Регистрация прошла успешно!', 'success');
             setTimeout(() => {
                 window.location.href = `verify-email.html?email=${encodeURIComponent(data.email)}`;
             }, 500);
         } catch (error) {
             showGlobalError(error.message); // Используем showGlobalError для отображения ошибок
+            showNotification(error.message, 'error');
             console.error('Ошибка регистрации:', error);
         }
     });
 
-    // Функции валидации
-    function validatePassword() {
-        const password = document.getElementById('password').value;
-        if (password.length > 0 && (password.length < 5 || password.length > 12)) {
-            showError('password', 'Пароль должен быть от 5 до 12 символов');
-        } else {
-            clearError('password');
-        }
-    }
-
-    function validatePasswordMatch() {
-        const password = document.getElementById('password').value;
-        const confirmPassword = document.getElementById('confirmPassword').value;
-
-        if (confirmPassword.length > 0 && password !== confirmPassword) {
-            showError('confirmPassword', 'Пароли не совпадают');
-        } else if (confirmPassword.length > 0) {
-            clearError('confirmPassword');
-        }
-    }
-
     // Вспомогательные функции
     function showError(fieldId, message) {
         const field = document.getElementById(fieldId);
-        const formGroup = field.closest('.form-group') || field.parentElement;
+        const formGroup = field.closest('.form-group') || (field.parentElement ? field.parentElement : null);
+
+        // Проверяем, что formGroup существует, прежде чем продолжить
+        if (!formGroup) {
+            console.warn(`Form group not found for field: ${fieldId}`);
+            return;
+        }
 
         // Создаем или находим контейнер для ошибки
         let errorContainer = formGroup.querySelector('.error-container');
@@ -118,7 +119,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function clearError(fieldId) {
         const field = document.getElementById(fieldId);
-        const formGroup = field.closest('.form-group') || field.parentElement;
+        const formGroup = field.closest('.form-group') || (field.parentElement ? field.parentElement : null);
+        if (!formGroup) return; // Добавлена проверка на null
         const errorContainer = formGroup.querySelector('.error-container');
 
         if (errorContainer) {
@@ -144,5 +146,34 @@ document.addEventListener('DOMContentLoaded', () => {
             document.querySelector('form').appendChild(errorElement);
         }
         errorElement.textContent = message;
+    }
+
+    function showNotification(message, type = 'info') {
+        const notification = document.createElement('div');
+        notification.classList.add('notification');
+        notification.textContent = message;
+
+        // Добавляем классы в зависимости от типа уведомления
+        if (type === 'success') {
+            notification.classList.add('success');
+        } else if (type === 'error') {
+            notification.classList.add('error');
+        }
+
+        notificationContainer.appendChild(notification);
+
+        // Анимация появления
+        setTimeout(() => {
+            notification.classList.add('show');
+        }, 10); // Небольшая задержка для запуска анимации
+
+        // Автоматическое скрытие через 3 секунды
+        setTimeout(() => {
+            notification.classList.remove('show');
+            // Удаляем элемент из DOM после завершения анимации
+            setTimeout(() => {
+                notification.remove();
+            }, 1000); // Время анимации
+        }, 3000);
     }
 });

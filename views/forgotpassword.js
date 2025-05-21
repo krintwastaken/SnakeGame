@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         try {
+            //const response = await fetch('http://localhost:5000/auth/request-password-reset', {
             const response = await fetch('https://snakegame-6n0q.onrender.com/auth/request-password-reset', {
                 method: 'POST',
                 headers: {

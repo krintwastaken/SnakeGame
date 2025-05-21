@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('DOM fully loaded');
     const container = document.querySelector('.container');
     container.classList.add('show');
 
@@ -31,6 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         try {
+            //const response = await fetch('http://localhost:5000/auth/reset-password-with-token', {
             const response = await fetch('https://snakegame-6n0q.onrender.com/auth/reset-password-with-token', {
                 method: 'POST',
                 headers: {
