@@ -7,6 +7,7 @@
     <title>Подтверждение email</title>
     <link rel="icon" href="img/game.png" type="image/png">
     <link rel="stylesheet" href="style.css">
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 <body>
     <div class="container">
@@ -22,6 +23,17 @@
             <a href="#" id="resendCode">Отправить код повторно</a>
         </div>
     </div>
+    <div class="notification-container"></div>
+
+    <!-- Модальное окно капчи -->
+    <div id="captchaModal" class="modal" style="display:none;">
+        <div class="modal-content" style="max-width:340px;text-align:center;">
+            <h3>Подтвердите, что вы не робот</h3>
+            <div id="recaptcha-container"></div>
+            <button id="captchaConfirmBtn" style="margin-top:18px;">Продолжить</button>
+        </div>
+    </div>
+
     <script src="verify-email.js"></script>
 </body>
 </html>
