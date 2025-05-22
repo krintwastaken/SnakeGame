@@ -904,3 +904,19 @@ h1 {
     display: none; /* Hidden by default */
     justify-content: center; /* Center the reCAPTCHA */
 }
+
+#recaptcha-container {
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+    opacity: 0;
+    transform: translateY(-30px);
+    transition: opacity 0.4s cubic-bezier(0.68,-0.55,0.27,1.55), transform 0.4s cubic-bezier(0.68,-0.55,0.27,1.55);
+    will-change: opacity, transform;
+}
+
+/* Класс для показа капчи с анимацией */
+#recaptcha-container.show {
+    opacity: 1;
+    transform: translateY(0);
+}
