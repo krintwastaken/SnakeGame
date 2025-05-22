@@ -182,7 +182,7 @@ document.addEventListener('DOMContentLoaded', () => {
     generateQrCodeButton.addEventListener('click', generateQrCode);
     enable2faButton.addEventListener('click', enableTwoFactor);
     disable2faButton.addEventListener('click', disableTwoFactor);
-    document.getElementById('exit-button').addEventListener('click', logout);
+    /*document.getElementById('exit-button').addEventListener('click', logout);*/
     //Добавим кнопку для выхода на страницу menu.html
     document.getElementById('menu-button').addEventListener('click', goToMenu);
 
