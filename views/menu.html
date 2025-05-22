@@ -21,23 +21,39 @@
 
     <!-- Модальное окно для инструкции -->
     <div id="instructions-modal" class="modal">
-        <div class="modal-content">
+        <div class="modal-content instructions-modal-content">
             <span class="close-modal" onclick="closeModal('instructions-modal')">&times;</span>
-            <h2>Инструкция к игре "Змейка"</h2>
-            <p>Цель игры - управлять змейкой и собирать яблоки, чтобы увеличивать её длину.</p>
-            <h3>Управление:</h3>
-            <ul>
-                <li><strong>Стрелка вверх</strong> - движение вверх</li>
-                <li><strong>Стрелка вниз</strong> - движение вниз</li>
-                <li><strong>Стрелка влево</strong> - движение влево</li>
-                <li><strong>Стрелка вправо</strong> - движение вправо</li>
-            </ul>
-            <h3>Правила:</h3>
-            <ul>
-                <li>Каждое съеденное яблоко увеличивает длину змейки и даёт 1 очко</li>
-                <li>Не врезайтесь в стены и в собственное тело</li>
-                <li>Чем длиннее змейка, тем сложнее управление</li>
-            </ul>
+            <h2 style="text-align:center; margin-bottom: 10px;">
+                <span style="font-size: 1.3em;">🎮</span> <b>Инструкция к игре "Змейка"</b>
+            </h2>
+            <p style="text-align:center; margin-bottom: 18px;">
+                Цель игры – управлять змейкой и собирать фрукты, увеличивая её длину и счёт!
+            </p>
+            <div class="instruction-block">
+                <div class="instruction-item">
+                    <i class="fa fa-layer-group" style="color:#fff; background:#2ecc40; border-radius:50%; padding:7px 9px; margin-right:10px;"></i>
+                    <b>Управление:</b> Используйте стрелки на клавиатуре
+                </div>
+                <div class="instruction-item">
+                    <i class="fa fa-apple-alt" style="color:#fff; background:#ffb347; border-radius:50%; padding:7px 9px; margin-right:10px;"></i>
+                    <b>Съешь фрукт</b> – получи +1 очко и стань длиннее
+                </div>
+                <div class="instruction-item">
+                    <i class="fa fa-shield-alt" style="color:#fff; background:#e74c3c; border-radius:50%; padding:7px 9px; margin-right:10px;"></i>
+                    <b>Избегай стен</b> и собственного тела
+                </div>
+            </div>
+            <div class="rules-block">
+                <div class="rules-title">
+                    <i class="fa fa-scroll" style="color:#ffe066; margin-right:7px;"></i>
+                    <b>Основные правила:</b>
+                </div>
+                <ul class="rules-list">
+                    <li>★ Каждый фрукт увеличивает длину змейки</li>
+                    <li>★ Чем длиннее змейка, тем выше сложность</li>
+                    <li>★ Набери максимум очков и попади в топ!</li>
+                </ul>
+            </div>
         </div>
     </div>
 
