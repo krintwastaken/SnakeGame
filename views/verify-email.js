@@ -33,22 +33,19 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function showCaptchaModal() {
-        captchaModal.style.display = 'flex';
+        captchaModal.classList.add('show'); // Используем класс для показа
         const recaptchaContainer = document.getElementById('recaptcha-container');
-        // Очищаем контейнер и убираем анимацию перед рендером
         recaptchaContainer.innerHTML = '';
         recaptchaContainer.classList.remove('show');
         captchaPassed = false;
-        // Проверяем, что grecaptcha загружен
         if (typeof grecaptcha !== "undefined") {
             grecaptcha.render('recaptcha-container', {
                 'sitekey': '6Lc3MkQrAAAAALTBKy0p3JadmFHlM_deHepkeJp3',
                 'callback': () => { 
                     captchaPassed = true;
-                    recaptchaContainer.classList.add('show'); // Плавное появление
+                    recaptchaContainer.classList.add('show');
                 }
             });
-            // Добавляем анимацию после небольшой задержки (если нужно)
             setTimeout(() => recaptchaContainer.classList.add('show'), 100);
         } else {
             showNotification('Ошибка загрузки капчи. Попробуйте обновить страницу.', 'error');
