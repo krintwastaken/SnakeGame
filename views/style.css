@@ -908,7 +908,7 @@ h1 {
 #recaptcha-container {
     margin-top: 10px;
     display: flex;
-    justify-content: center;
+    justify-content: bottom;
     opacity: 0;
     transform: translateY(-30px);
     transition: opacity 0.4s cubic-bezier(0.68,-0.55,0.27,1.55), transform 0.4s cubic-bezier(0.68,-0.55,0.27,1.55);
