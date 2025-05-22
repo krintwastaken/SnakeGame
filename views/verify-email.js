@@ -34,14 +34,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function showCaptchaModal() {
         captchaModal.style.display = 'flex';
-        if (!document.getElementById('g-recaptcha')) {
+        const recaptchaContainer = document.getElementById('recaptcha-container');
+        recaptchaContainer.innerHTML = '';
+        captchaPassed = false;
+        if (typeof grecaptcha !== "undefined") {
             grecaptcha.render('recaptcha-container', {
                 'sitekey': '6Lc3MkQrAAAAALTBKy0p3JadmFHlM_deHepkeJp3',
                 'callback': () => { captchaPassed = true; }
             });
+        } else {
+            showNotification('Ошибка загрузки капчи. Попробуйте обновить страницу.', 'error');
         }
     }
-
     captchaConfirmBtn.addEventListener('click', () => {
         if (captchaPassed) {
             captchaModal.style.display = 'none';
