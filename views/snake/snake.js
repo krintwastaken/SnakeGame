@@ -487,12 +487,14 @@ class MAIN {
         this.fruit.randomize(this.snake.body);
 
         this.sendScoreToServer(score);
-        this.currentScore = 0;
+        //this.currentScore = 0;
 
         // Отображаем окно Game Over
         gameOverStats.textContent = `Набрано фруктов: ${this.currentScore}\nОбщий счет: ${this.totalScore}`;
         gameOverModal.style.display = 'flex';  // Используем flex
         clearInterval(gameInterval);
+
+        this.currentScore = 0;
     }
 
     async sendScoreToServer(score) {
