@@ -22,11 +22,11 @@
 
     <!-- Модальное окно капчи -->
     <div id="captchaModal" class="modal">
-        <div class="modal-content" style="max-width:340px;text-align:center;">
+        <form id="captchaForm" class="modal-content" style="max-width:340px;text-align:center;">
             <h3>Подтвердите, что вы не робот</h3>
             <div id="recaptcha-container"></div>
-            <button id="captchaConfirmBtn" style="margin-top:18px;">Продолжить</button>
-        </div>
+            <button id="captchaConfirmBtn" type="submit" style="margin-top:18px;">Продолжить</button>
+        </form>
     </div>
 
     <script src="two-factor-verify.js"></script>

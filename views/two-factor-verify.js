@@ -12,6 +12,19 @@ document.addEventListener('DOMContentLoaded', () => {
     let captchaPassed = false;
     let failedAttempts = 0;
     const MAX_ATTEMPTS = 5;
+    
+    const captchaForm = document.getElementById('captchaForm');
+    captchaForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        if (captchaPassed) {
+            captchaModal.style.display = 'none';
+            failedAttempts = 0;
+            captchaPassed = false;
+            grecaptcha.reset();
+        } else {
+            showNotification('Пожалуйста, подтвердите капчу', 'error');
+        }
+    });
 
     function showNotification(message, type = 'info') {
         const notification = document.createElement('div');
@@ -57,7 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
             showNotification('Ошибка загрузки капчи. Попробуйте обновить страницу.', 'error');
         }
     }
-
+/*
     captchaConfirmBtn.addEventListener('click', () => {
         if (captchaPassed) {
             captchaModal.style.display = 'none';
@@ -68,7 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
             showNotification('Пожалуйста, подтвердите капчу', 'error');
         }
     });
-
+*/
     form.addEventListener('submit', async (event) => {
         event.preventDefault();
 
