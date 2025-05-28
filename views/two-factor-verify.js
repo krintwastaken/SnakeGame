@@ -18,6 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault();
         if (captchaPassed) {
             captchaModal.style.display = 'none';
+            captchaModal.classList.remove('show');
             failedAttempts = 0;
             captchaPassed = false;
             grecaptcha.reset();
@@ -52,7 +53,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function showCaptchaModal() {
-        captchaModal.classList.add('show'); // Используем класс для показа
+        captchaModal.style.display = 'flex';
+        captchaModal.classList.add('show');
         const recaptchaContainer = document.getElementById('recaptcha-container');
         recaptchaContainer.innerHTML = '';
         recaptchaContainer.classList.remove('show');
