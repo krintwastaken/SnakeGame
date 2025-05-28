@@ -60,19 +60,19 @@ document.addEventListener('DOMContentLoaded', () => {
         const recaptchaContainer = document.getElementById('recaptcha-container');
         captchaPassed = false;
 
-        // Рендерим капчу только если еще не рендерили
         if (typeof grecaptcha !== "undefined") {
             if (recaptchaWidgetId === null) {
                 recaptchaWidgetId = grecaptcha.render('recaptcha-container', {
                     'sitekey': '6Lc3MkQrAAAAALTBKy0p3JadmFHlM_deHepkeJp3',
                     'callback': () => { 
                         captchaPassed = true;
-                        recaptchaContainer.classList.add('show');
                     }
                 });
             } else {
                 grecaptcha.reset(recaptchaWidgetId);
             }
+            // Делаем контейнер видимым после рендера
+            recaptchaContainer.classList.add('show');
         } else {
             showNotification('Ошибка загрузки капчи. Попробуйте обновить страницу.', 'error');
         }
