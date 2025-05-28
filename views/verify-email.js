@@ -1,3 +1,5 @@
+let recaptchaWidgetId = null;
+
 document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => {
         document.querySelector('.container').classList.add('show');
@@ -12,6 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const MAX_ATTEMPTS = 5;
     const container = document.getElementById('verify-container');
     const confirmButton = document.getElementById('confirm');
+    const captchaForm = document.getElementById('captchaForm');
 
     function showNotification(message, type = 'info') {
         let notificationContainer = document.querySelector('.notification-container');
@@ -34,25 +37,44 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function showCaptchaModal() {
+        captchaModal.style.display = 'flex';
         captchaModal.classList.add('show');
         const recaptchaContainer = document.getElementById('recaptcha-container');
-        recaptchaContainer.innerHTML = '';
-        recaptchaContainer.classList.remove('show');
         captchaPassed = false;
+
         if (typeof grecaptcha !== "undefined") {
-            grecaptcha.render('recaptcha-container', {
-                'sitekey': '6Ld0KEArAAAAACcp0r_c-3t784MnYUf4UyImv2La',
-                'callback': () => { 
-                    captchaPassed = true;
-                    recaptchaContainer.classList.add('show');
-                }
-            });
-            setTimeout(() => recaptchaContainer.classList.add('show'), 100);
+            if (recaptchaWidgetId === null) {
+                recaptchaWidgetId = grecaptcha.render('recaptcha-container', {
+                    'sitekey': '6Lc3MkQrAAAAALTBKy0p3JadmFHlM_deHepkeJp3',
+                    'callback': () => { 
+                        captchaPassed = true;
+                    }
+                });
+            } else {
+                grecaptcha.reset(recaptchaWidgetId);
+            }
+            recaptchaContainer.classList.add('show');
         } else {
             showNotification('Ошибка загрузки капчи. Попробуйте обновить страницу.', 'error');
         }
     }
 
+    if (captchaForm) {
+        captchaForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            if (captchaPassed) {
+                captchaModal.style.display = 'none';
+                captchaModal.classList.remove('show');
+                failedAttempts = 0;
+                captchaPassed = false;
+                grecaptcha.reset();
+            } else {
+                showNotification('Пожалуйста, подтвердите капчу', 'error');
+            }
+        });
+    }
+    
+    /*
     captchaConfirmBtn.addEventListener('click', () => {
         if (captchaPassed) {
             captchaModal.style.display = 'none';
@@ -63,6 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
             showNotification('Пожалуйста, подтвердите капчу', 'error');
         }
     });
+    */
 
     document.getElementById('verifyEmailForm').addEventListener('submit', async function(e) {
         e.preventDefault();
