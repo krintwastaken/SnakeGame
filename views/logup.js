@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         try {
             const response = await fetch('http://localhost:5000/auth/registration', {
-                //const response = await fetch('https://snakegame-6n0q.onrender.com/auth/registration', {
+            //const response = await fetch('https://snakegame-6n0q.onrender.com/auth/registration', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -175,5 +175,35 @@ document.addEventListener('DOMContentLoaded', () => {
                 notification.remove();
             }, 1000); // Время анимации
         }, 3000);
+    }
+
+    const passwordInput = document.getElementById('password');
+
+    passwordInput.addEventListener('input', validatePasswordRequirements);
+
+    function validatePasswordRequirements() {
+        const value = passwordInput.value;
+
+        // Проверки
+        const lengthValid = value.length >= 8 && value.length <= 127;
+        const uppercaseValid = /[A-ZА-ЯЁ]/.test(value);
+        const specialCharValid = /[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]/.test(value);
+        const digitValid = /\d/.test(value);
+
+        toggleRequirement('req-length', lengthValid);
+        toggleRequirement('req-uppercase', uppercaseValid);
+        toggleRequirement('req-special', specialCharValid);
+        toggleRequirement('req-digit', digitValid);
+    }
+
+    function toggleRequirement(id, isMet) {
+        const el = document.getElementById(id);
+        if (!el) return;
+
+        if (isMet) {
+            el.classList.add('met');
+        } else {
+            el.classList.remove('met');
+        }
     }
 });

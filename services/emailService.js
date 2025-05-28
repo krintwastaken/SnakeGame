@@ -23,8 +23,8 @@ transporter.verify((error, success) => {
 });
 
 async function sendResetPasswordEmail(email, token) {
-    //const resetUrl = `https://snakegameco.netlify.app/views/reset-password.html?token=${token}`;
-    const resetUrl = `http://localhost:5000/views/reset-password.html?token=${token}`;
+    //const resetUrl = `https://snakegameco.netlify.app/reset-password.html?token=${token}`;
+    const resetUrl = `http://localhost:5500/views/reset-password.html?token=${token}`;
 
     const mailOptions = {
         from: `"Snake Game" <${emailFrom}>`,

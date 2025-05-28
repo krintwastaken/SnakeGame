@@ -7,17 +7,28 @@
     <link rel="icon" href="img/game.png" type="image/png">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 <body>
     <div class="container">
         <h2>Подтверждение двухфакторной аутентификации</h2>
         <form id="twoFactorForm">
             <label for="twoFactorCode">Код 2FA:</label>
-            <input type="text" id="twoFactorCode" name="twoFactorCode" required>
-            <button type="submit">Подтвердить</button>
+            <input type="text" id="twoFactorCode" name="twoFactorCode" maxlength="6" required>
+            <button type="submit" class="menu-button">Подтвердить</button>
         </form>
-        <div class="notification-container"></div>
     </div>
+    <div class="notification-container"></div>
+
+    <!-- Модальное окно капчи -->
+    <div id="captchaModal" class="modal">
+        <div class="modal-content" style="max-width:340px;text-align:center;">
+            <h3>Подтвердите, что вы не робот</h3>
+            <div id="recaptcha-container"></div>
+            <button id="captchaConfirmBtn" style="margin-top:18px;">Продолжить</button>
+        </div>
+    </div>
+
     <script src="two-factor-verify.js"></script>
 </body>
 </html>

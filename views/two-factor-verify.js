@@ -7,6 +7,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const form = document.getElementById('twoFactorForm');
     const notificationContainer = document.querySelector('.notification-container');
+    const captchaModal = document.getElementById('captchaModal');
+    const captchaConfirmBtn = document.getElementById('captchaConfirmBtn');
+    let captchaPassed = false;
+    let failedAttempts = 0;
+    const MAX_ATTEMPTS = 5;
 
     function showNotification(message, type = 'info') {
         const notification = document.createElement('div');
@@ -33,8 +38,44 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 3000);
     }
 
+    function showCaptchaModal() {
+        captchaModal.classList.add('show'); // Используем класс для показа
+        const recaptchaContainer = document.getElementById('recaptcha-container');
+        recaptchaContainer.innerHTML = '';
+        recaptchaContainer.classList.remove('show');
+        captchaPassed = false;
+        if (typeof grecaptcha !== "undefined") {
+            grecaptcha.render('recaptcha-container', {
+                'sitekey': '6Lc3MkQrAAAAALTBKy0p3JadmFHlM_deHepkeJp3',
+                'callback': () => { 
+                    captchaPassed = true;
+                    recaptchaContainer.classList.add('show');
+                }
+            });
+            setTimeout(() => recaptchaContainer.classList.add('show'), 100);
+        } else {
+            showNotification('Ошибка загрузки капчи. Попробуйте обновить страницу.', 'error');
+        }
+    }
+
+    captchaConfirmBtn.addEventListener('click', () => {
+        if (captchaPassed) {
+            captchaModal.style.display = 'none';
+            failedAttempts = 0;
+            captchaPassed = false;
+            grecaptcha.reset();
+        } else {
+            showNotification('Пожалуйста, подтвердите капчу', 'error');
+        }
+    });
+
     form.addEventListener('submit', async (event) => {
         event.preventDefault();
+
+        if (captchaModal.style.display === 'flex') {
+            showNotification('Сначала подтвердите капчу', 'error');
+            return;
+        }
 
         const twoFactorCode = document.getElementById('twoFactorCode').value;
         const username = localStorage.getItem('pendingUsername'); // Получаем имя пользователя из localStorage
@@ -55,21 +96,25 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             if (!response.ok) {
+                failedAttempts++;
+                if (failedAttempts >= MAX_ATTEMPTS) showCaptchaModal();
                 const errorData = await response.json();
                 showNotification(errorData.message || 'Неверный код 2FA', 'error');
                 return;
             }
 
             const data = await response.json();
-            localStorage.removeItem('pendingUsername'); // Очищаем pendingUsername
-            localStorage.removeItem('pendingPassword'); // Очищаем пароль
+            localStorage.removeItem('pendingUsername');
+            localStorage.removeItem('pendingPassword');
             localStorage.setItem('token', data.token);
             showNotification('Вход выполнен успешно!', 'success');
             setTimeout(() => window.location.href = 'menu.html', 500);
-
+            failedAttempts = 0;
         } catch (error) {
-            console.error('Ошибка при подтверждении 2FA:', error);
+            failedAttempts++;
+            if (failedAttempts >= MAX_ATTEMPTS) showCaptchaModal();
             showNotification('Ошибка при подтверждении 2FA', 'error');
         }
     });
 });
+

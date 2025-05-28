@@ -1,16 +1,52 @@
+
+// Объявление переменных для модальных окон
+const welcomeModal = document.getElementById('welcomeModal');
+const gameOverModal = document.getElementById('gameOverModal');
+const gameOverStats = document.getElementById('gameOverStats');
+const startGameButton = document.getElementById('startGameButton');
+const restartButton = document.getElementById('restartButton');
+
 const font = new FontFace('Poetsen One', 'url(./Fonts/PoetsenOne-Regular.ttf)');
 
-   font.load().then(function(loaded_font) {
-       document.fonts.add(loaded_font);
-       console.log('Font loaded');
+// Функция для запуска игры
+const startGame = () => {
+    welcomeModal.style.display = 'none';
+    localStorage.setItem('welcomeShown', 'true');
+    game();
+};
 
-       document.fonts.ready.then(() => {
-           game();
-       });
+// Функция для загрузки шрифта и проверки показа приветственного окна
+const loadAndCheckWelcome = () => {
+    font.load().then(function(loaded_font) {
+        document.fonts.add(loaded_font);
+        console.log('Font loaded');
 
-   }).catch(function(error) {
-       console.error('Font loading error:', error);
-   });
+        document.fonts.ready.then(() => {
+            if (!localStorage.getItem('welcomeShown')) {
+                welcomeModal.style.display = 'flex'; // Показываем окно, используя flexbox
+            } else {
+                startGame(); // Запускаем игру, если окно уже показывали
+            }
+        });
+
+    }).catch(function(error) {
+        console.error('Font loading error:', error);
+        alert('Ошибка загрузки шрифта. Игра может работать некорректно.');
+        startGame(); // Запускаем игру, даже если шрифт не загрузился
+    });
+};
+
+// Вызываем функцию загрузки шрифта и проверки после определения всех элементов
+loadAndCheckWelcome();
+
+// Обработчик кнопки "Начать игру"
+startGameButton.addEventListener('click', startGame);
+
+// Обработчик кнопки "Играть снова"
+restartButton.addEventListener('click', () => {
+    gameOverModal.style.display = 'none';
+    game();
+});
 
 // Графика
 const head_up_img = new Image();
@@ -118,7 +154,7 @@ class SNAKE {
     constructor() {
         this.body = [new Vector2(5, 8), new Vector2(4, 8), new Vector2(3, 8)];
         this.direction = new Vector2(0, 0);
-        
+
         this.head = null;
         this.tail = null;
 
@@ -222,38 +258,45 @@ class SNAKE {
 }
 
 class FRUIT {
-    constructor() {
-        this.currentFruit = 'apple'; // По умолчанию яблоко
+    constructor(fruitType) {
+        this.currentFruit = fruitType || 'apple'; // По умолчанию яблоко, но можно передать тип
         this.randomize([]);
+        this.setImage(); // Устанавливаем изображение сразу при создании
+    }
+
+    setImage() {
+        switch (this.currentFruit) {
+            case 'banana':
+                this.img = banana_img;
+                break;
+            case 'lemon':
+                this.img = lemon_img;
+                break;
+            case 'watermelon':
+                this.img = watermelon_img;
+                break;
+            case 'pineapple':
+                this.img = pineapple_img;
+                break;
+            default:
+                this.img = apple_img;
+        }
+        // Проверяем загрузку изображения, если нет - ставим яблоко
+        if (!this.img.complete) {
+            this.img = apple_img;
+        }
     }
 
     draw_fruit() {
         const x_pos = Math.trunc(this.pos.x * cell_size);
         const y_pos = Math.trunc(this.pos.y * cell_size);
-        let fruitImage;
-        
-        switch(this.currentFruit) {
-            case 'banana':
-                fruitImage = banana_img.complete && banana_img.naturalWidth !== 0 ? banana_img : apple_img;
-                break;
-            case 'lemon':
-                fruitImage = lemon_img.complete && lemon_img.naturalWidth !== 0 ? lemon_img : apple_img;
-                break;
-            case 'watermelon':
-                fruitImage = watermelon_img.complete && watermelon_img.naturalWidth !== 0 ? watermelon_img : apple_img;
-                break;
-            case 'pineapple':
-                fruitImage = pineapple_img.complete && pineapple_img.naturalWidth !== 0 ? pineapple_img : apple_img;
-                break;
-            default:
-                fruitImage = apple_img;
-        }
-        
-        ctx.drawImage(fruitImage, x_pos, y_pos, cell_size, cell_size);
+
+        ctx.drawImage(this.img, x_pos, y_pos, cell_size, cell_size);
     }
 
     setFruitType(type) {
         this.currentFruit = type;
+        this.setImage(); // Обновляем изображение при смене типа
     }
 
     randomize(snakeBody) {
@@ -263,12 +306,12 @@ class FRUIT {
                 const position = new Vector2(x, y);
                 let isOnSnake = false;
                 if (snakeBody) {
-                  for (const block of snakeBody) {
-                      if (block.equals(position)) {
-                          isOnSnake = true;
-                          break;
-                      }
-                  }
+                    for (const block of snakeBody) {
+                        if (block.equals(position)) {
+                            isOnSnake = true;
+                            break;
+                        }
+                    }
                 }
 
                 if (!isOnSnake) {
@@ -292,7 +335,8 @@ class MAIN {
         this.fruit = new FRUIT();
         this.currentScore = 0;
         this.totalScore = 0;
-        
+        this.initializeFruit();
+
         // Добавляем цветовые темы
         this.themes = {
             classic: {
@@ -316,11 +360,9 @@ class MAIN {
                 scoreBlock: 'rgb(76, 175, 80)'
             }
         };
-        
+
         this.currentTheme = 'classic';
-        
-        // Устанавливаем выбранный фрукт
-        this.initializeFruit();
+        this.fruitLoaded = false;
     }
 
     async initializeFruit() {
@@ -331,8 +373,9 @@ class MAIN {
                 return;
             }
 
-            const response = await fetch('https://snakegame-6n0q.onrender.com/auth/get-fruit', {
-            //const response = await fetch('http://localhost:5000/auth/get-fruit', {
+            const response = await fetch('http://localhost:5000/auth/get-fruit', {
+            //const response = await fetch('https://snakegame-6n0q.onrender.com/auth/get-fruit', {
+                method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -344,13 +387,20 @@ class MAIN {
 
             const data = await response.json();
             this.fruit.setFruitType(data.selectedFruit);
+            this.fruitLoaded = true; // Устанавливаем флаг после загрузки
+            draw();
+            this.draw_score();
         } catch (error) {
             console.error('Error getting selected fruit:', error);
             this.fruit.setFruitType('apple');
+            this.fruitLoaded = true;
+            draw();
+            this.draw_score();
         }
     }
 
     resetGame() {
+        this.fruitLoaded = false;
         this.snake.reset();
         this.fruit.randomize(this.snake.body);
         this.currentScore = 0;
@@ -366,8 +416,8 @@ class MAIN {
         }
 
         try {
-            const response = await fetch('https://snakegame-6n0q.onrender.com/auth/score', {
-            //const response = await fetch('http://localhost:5000/auth/score', {
+            const response = await fetch('http://localhost:5000/auth/score', {
+            //const response = await fetch('https://snakegame-6n0q.onrender.com/auth/score', {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -394,7 +444,9 @@ class MAIN {
 
     draw_elements() {
         this.draw_grass();
-        this.fruit.draw_fruit();
+        if (this.fruitLoaded) { // Рисуем фрукт только если он загружен
+            this.fruit.draw_fruit();
+        }
         this.snake.draw_snake();
         this.draw_score();
     }
@@ -405,6 +457,9 @@ class MAIN {
             this.snake.play_crunch_sound();
             this.fruit.randomize(this.snake.body);
             this.currentScore++;
+
+            // Обновляем totalScore локально (на клиенте)
+            this.totalScore++;
             this.draw_score();
         }
     }
@@ -434,6 +489,13 @@ class MAIN {
         this.fruit.randomize(this.snake.body);
 
         this.sendScoreToServer(score);
+        //this.currentScore = 0;
+
+        // Отображаем окно Game Over
+        gameOverStats.textContent = `Набрано фруктов: ${this.currentScore}\nОбщий счет: ${this.totalScore}`;
+        gameOverModal.style.display = 'flex';  // Используем flex
+        clearInterval(gameInterval);
+
         this.currentScore = 0;
     }
 
@@ -446,8 +508,8 @@ class MAIN {
         }
 
         try {
-            const response = await fetch('https://snakegame-6n0q.onrender.com/auth/update-score', {
-            //const response = await fetch('http://localhost:5000/auth/update-score', {
+            const response = await fetch('http://localhost:5000/auth/update-score', {
+            //const response = await fetch('https://snakegame-6n0q.onrender.com/auth/update-score', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -493,7 +555,7 @@ class MAIN {
     draw_score() {
         const score_text = String(this.currentScore);
         const total_score_text = String(this.totalScore);
-    
+
         const apple_size = 30;
         const padding = 15;
         const block_height = 35;
@@ -501,18 +563,18 @@ class MAIN {
         const text_color = '#000000';
         const score_area_height = cell_size * 2;
         const block_color = this.themes[this.currentTheme].scoreBlock;
-    
+
         ctx.font = '25px "Poetsen One", sans-serif';
         const score_width = ctx.measureText(score_text).width;
         const total_width = score_width + apple_size + padding * 3;
         const block_x = cell_size * cell_number - total_width - right_margin;
         const block_y = cell_size * cell_number + (score_area_height - block_height) / 2;
-    
+
         ctx.beginPath();
         ctx.roundRect(block_x, block_y, total_width, block_height, 8);
         ctx.fillStyle = block_color;
         ctx.fill();
-    
+
         let fruitImage;
         switch(this.fruit.currentFruit) {
             case 'banana':
@@ -530,30 +592,37 @@ class MAIN {
             default:
                 fruitImage = apple_img;
         }
-    
+
         ctx.drawImage(fruitImage, block_x + padding, block_y + (block_height - apple_size) / 2, apple_size, apple_size);
-        
+
         ctx.fillStyle = text_color;
         ctx.font = '25px "Poetsen One", sans-serif';
         ctx.textAlign = 'left';
         ctx.fillText(score_text, block_x + padding + apple_size + padding / 2, block_y + block_height - 8);
-    
+
         const total_score_width = ctx.measureText(total_score_text).width;
         const total_total_width = total_score_width + apple_size + padding * 3;
         const total_block_x = right_margin;
         const total_block_y = cell_size * cell_number + (score_area_height - block_height) / 2;
-    
+
         ctx.beginPath();
         ctx.roundRect(total_block_x, total_block_y, total_total_width + 10, block_height, 8);
         ctx.fillStyle = block_color;
         ctx.fill();
-    
+
         ctx.drawImage(fruitImage, total_block_x + padding, total_block_y + (block_height - apple_size) / 2, apple_size, apple_size);
-        
+
         ctx.fillStyle = text_color;
         ctx.font = '25px "Poetsen One", sans-serif';
         ctx.textAlign = 'left';
         ctx.fillText(total_score_text, total_block_x + padding + apple_size + padding / 2, total_block_y + block_height - 8);
+
+        // Добавляем надписи
+        ctx.fillStyle = text_color;
+        ctx.font = '20px "Poetsen One", sans-serif';
+        ctx.textAlign = 'center'; // Выравниваем текст по центру
+        ctx.fillText("Current Score", block_x + total_width / 2, cell_size * cell_number + (score_area_height - block_height) / 2 - 5);
+        ctx.fillText("Total Score", total_block_x + total_total_width / 2, cell_size * cell_number + (score_area_height - block_height) / 2 - 5);
     }
 }
 
@@ -573,8 +642,7 @@ function game() {
 }
 
 function draw() {
-    ctx.fillStyle = 'rgb(175, 215, 70)';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.clearRect(0, 0, canvas.width, canvas.height); // Очищаем canvas перед перерисовкой
     main_game.draw_elements();
 }
 
