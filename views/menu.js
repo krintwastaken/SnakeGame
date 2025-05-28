@@ -235,8 +235,6 @@ async function selectFruit(fruitType) {
             if (!response.ok) {
                 throw new Error('Ошибка при обновлении фрукта');
             }
-
-            alert(`Выбран фрукт: ${fruitNames[fruitType]}`);
         } catch (error) {
             console.error('Error:', error);
             alert('Произошла ошибка при сохранении выбранного фрукта');
