@@ -4,34 +4,83 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const urlParams = new URLSearchParams(window.location.search);
     const token = urlParams.get('token');
+    const notificationContainer = document.querySelector('.notification-container');
 
     if (!token) {
-        showGlobalError('Неверная ссылка для сброса пароля');
+        showNotification('Неверная ссылка для сброса пароля', 'error');
         return;
     }
 
     document.getElementById('token').value = token;
 
+    // Добавлена функция для переключения видимости пароля
+    function setupPasswordToggle(inputId, toggleId) {
+        const passwordInput = document.getElementById(inputId);
+        const togglePassword = document.getElementById(toggleId);
+
+        togglePassword.addEventListener('click', function() {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            this.classList.toggle('fa-eye');
+            this.classList.toggle('fa-eye-slash');
+        });
+    }
+
+    // Инициализация переключателей видимости
+    setupPasswordToggle('newPassword', 'toggleNewPassword');
+    setupPasswordToggle('confirmPassword', 'toggleConfirmPassword');
+
+    // Добавлена валидация пароля
+    function validatePasswordRequirements() {
+        const value = document.getElementById('newPassword').value;
+
+        const lengthValid = value.length >= 8 && value.length <= 127;
+        const uppercaseValid = /[A-ZА-ЯЁ]/.test(value);
+        const specialCharValid = /[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]/.test(value);
+        const digitValid = /\d/.test(value);
+
+        toggleRequirement('req-length', lengthValid);
+        toggleRequirement('req-uppercase', uppercaseValid);
+        toggleRequirement('req-special', specialCharValid);
+        toggleRequirement('req-digit', digitValid);
+
+        return lengthValid && uppercaseValid && specialCharValid && digitValid;
+    }
+
+    function toggleRequirement(id, isMet) {
+        const el = document.getElementById(id);
+        if (!el) return;
+
+        if (isMet) {
+            el.classList.add('met');
+        } else {
+            el.classList.remove('met');
+        }
+    }
+
+    // Проверка при вводе пароля
+    document.getElementById('newPassword').addEventListener('input', validatePasswordRequirements);
+
     document.getElementById('resetPasswordForm').addEventListener('submit', async function(e) {
         e.preventDefault();
-        clearErrors();
         
         const newPassword = document.getElementById('newPassword').value;
         const confirmPassword = document.getElementById('confirmPassword').value;
 
-        if (newPassword.length < 5 || newPassword.length > 12) {
-            showError('newPassword', 'Пароль должен быть от 5 до 12 символов');
+        // Проверка требований к паролю
+        if (!validatePasswordRequirements()) {
+            showNotification('Пароль не соответствует требованиям', 'error');
             return;
         }
 
         if (newPassword !== confirmPassword) {
-            showError('confirmPassword', 'Пароли не совпадают');
+            showNotification('Пароли не совпадают', 'error');
             return;
         }
 
         try {
-            //const response = await fetch('http://localhost:5000/auth/reset-password-with-token', {
             const response = await fetch('https://snakegame-6n0q.onrender.com/auth/reset-password-with-token', {
+            //const response = await fetch('http://localhost:5000/auth/reset-password-with-token', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -47,49 +96,38 @@ document.addEventListener('DOMContentLoaded', () => {
                 throw new Error(errorData.message || 'Ошибка при сбросе пароля');
             }
 
-            showSuccessMessage('Пароль успешно изменен! Перенаправление...');
+            showNotification('Пароль успешно изменен! Перенаправление...', 'success');
             setTimeout(() => window.location.href = 'index.html', 2000);
         } catch (error) {
-            showGlobalError(error.message);
-            console.error('Error:', error);
+            showNotification(error.message || 'Ошибка при сбросе пароля', 'error');
         }
     });
 
-    function showSuccessMessage(message) {
-        const messageEl = document.getElementById('reset-message');
-        messageEl.textContent = message;
-        messageEl.style.color = 'green';
-    }
+    // Улучшенная функция уведомлений в правом нижнем углу
+    function showNotification(message, type = 'info') {
+        const notification = document.createElement('div');
+        notification.classList.add('notification');
+        notification.textContent = message;
 
-    function showError(fieldId, message) {
-        const field = document.getElementById(fieldId);
-        let errorElement = field.nextElementSibling;
-        
-        if (!errorElement || !errorElement.classList.contains('error-message')) {
-            errorElement = document.createElement('div');
-            errorElement.className = 'error-message';
-            field.parentNode.insertBefore(errorElement, field.nextSibling);
+        if (type === 'success') {
+            notification.classList.add('success');
+        } else if (type === 'error') {
+            notification.classList.add('error');
         }
-        
-        errorElement.textContent = message;
-        field.classList.add('error');
-    }
 
-    function clearErrors() {
-        document.querySelectorAll('.error-message').forEach(el => el.remove());
-        document.querySelectorAll('.error').forEach(el => el.classList.remove('error'));
-        const globalError = document.getElementById('global-error');
-        if (globalError) globalError.textContent = '';
-    }
+        notificationContainer.appendChild(notification);
 
-    function showGlobalError(message) {
-        let errorElement = document.getElementById('global-error');
-        if (!errorElement) {
-            errorElement = document.createElement('div');
-            errorElement.id = 'global-error';
-            errorElement.className = 'global-error-message';
-            document.querySelector('form').appendChild(errorElement);
-        }
-        errorElement.textContent = message;
+        // Анимация появления
+        setTimeout(() => {
+            notification.classList.add('show');
+        }, 10);
+
+        // Автоматическое скрытие через 3 секунды
+        setTimeout(() => {
+            notification.classList.remove('show');
+            setTimeout(() => {
+                notification.remove();
+            }, 1000);
+        }, 3000);
     }
 });

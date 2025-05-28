@@ -10,22 +10,21 @@
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 <body>
-    <div class="container">
+    <div class="container" id="verify-container">
         <h2>Подтверждение email</h2>
         <p>На вашу почту отправлен 6-значный код подтверждения</p>
         <form id="verifyEmailForm">
             <label for="verificationCode">Код подтверждения:</label>
             <input type="text" id="verificationCode" maxlength="6" required>
-            <button type="submit">Подтвердить</button>
+            <button id="confirm" type="submit" class="menu-button">Подтвердить</button>
             <div id="message" class="message"></div>
         </form>
         <div class="links">
             <a href="#" id="resendCode">Отправить код повторно</a>
         </div>
     </div>
-    <div class="notification-container"></div>
-
-    <!-- Модальное окно капчи -->
+    <div class="notification-container"></div> 
+    
     <div id="captchaModal" class="modal">
         <div class="modal-content" style="max-width:340px;text-align:center;">
             <h3>Подтвердите, что вы не робот</h3>

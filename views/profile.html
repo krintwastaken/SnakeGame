@@ -27,7 +27,7 @@
                 <img id="qr-code" src="" alt="QR Code">
                 <p>Или введите этот секретный ключ: <span id="secret-key"></span></p>
                 <label for="verification-code">Код подтверждения:</label>
-                <input type="text" id="verification-code">
+                <input type="text" id="verification-code" maxlength="6" required>
                 <button id="enable-2fa" class="menu-button">Включить 2FA</button>
             </div>
 
@@ -37,8 +37,10 @@
             <div id="success-message" class="success-message"></div>
         </div>
         <button id="menu-button" class="menu-button">Назад</button>
-        <!--button id="exit-button" class="menu-button">Выйти</button-->
     </div>
+    
+    <div class="notification-container"></div>
+    
     <script src="profile.js"></script>
 </body>
 </html>

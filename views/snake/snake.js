@@ -373,6 +373,7 @@ class MAIN {
                 return;
             }
 
+            //const response = await fetch('http://localhost:5000/auth/get-fruit', {
             const response = await fetch('https://snakegame-6n0q.onrender.com/auth/get-fruit', {
                 method: 'GET',
                 headers: {
@@ -415,6 +416,7 @@ class MAIN {
         }
 
         try {
+            //const response = await fetch('http://localhost:5000/auth/score', {
             const response = await fetch('https://snakegame-6n0q.onrender.com/auth/score', {
                 method: 'GET',
                 headers: {
@@ -506,6 +508,7 @@ class MAIN {
         }
 
         try {
+            //const response = await fetch('http://localhost:5000/auth/update-score', {
             const response = await fetch('https://snakegame-6n0q.onrender.com/auth/update-score', {
                 method: 'POST',
                 headers: {

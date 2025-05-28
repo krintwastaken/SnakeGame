@@ -1,4 +1,3 @@
-
 document.addEventListener('DOMContentLoaded', () => {
     const container = document.querySelector('.container');
     if (container) {
@@ -17,22 +16,37 @@ document.addEventListener('DOMContentLoaded', () => {
     const verificationCodeInput = document.getElementById('verification-code');
     const errorMessageDiv = document.getElementById('error-message');
     const successMessageDiv = document.getElementById('success-message');
+    
+    // Получаем контейнер для уведомлений
+    const notificationContainer = document.querySelector('.notification-container');
 
     // Функция для отображения уведомлений
     function showNotification(message, type = 'info') {
         const notification = document.createElement('div');
-        notification.classList.add('notification', type);
+        notification.classList.add('notification');
         notification.textContent = message;
 
-        document.body.appendChild(notification);
+        // Добавляем классы в зависимости от типа уведомления
+        if (type === 'success') {
+            notification.classList.add('success');
+        } else if (type === 'error') {
+            notification.classList.add('error');
+        }
 
+        notificationContainer.appendChild(notification);
+
+        // Анимация появления
         setTimeout(() => {
             notification.classList.add('show');
         }, 10);
 
+        // Автоматическое скрытие через 3 секунды
         setTimeout(() => {
             notification.classList.remove('show');
-            setTimeout(() => notification.remove(), 500);
+            // Удаляем элемент из DOM после завершения анимации
+            setTimeout(() => {
+                notification.remove();
+            }, 1000);
         }, 3000);
     }
 

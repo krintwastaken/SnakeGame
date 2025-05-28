@@ -1,7 +1,11 @@
 document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => {
-        document.querySelector('.container').classList.add('show');
-    }, 100);});
+        const container = document.querySelector('.container');
+        if (container) {
+            container.classList.add('show');
+        }
+    }, 100);
+});
 
 function navigateTo(url) {
     const transition = document.createElement('div');
@@ -14,16 +18,25 @@ function navigateTo(url) {
         
         if(url.includes('game.html')) {
             setTimeout(() => {
-                document.querySelector('.game-container').classList.add('show');
+                const gameContainer = document.querySelector('.game-container');
+                if (gameContainer) {
+                    gameContainer.classList.add('show');
+                }
             }, 100);
         }
     }, 1000);
 
     if(url.includes('game.html')) {
-        document.querySelector('.game-container').classList.add('show');
+        const gameContainer = document.querySelector('.game-container');
+        if (gameContainer) {
+            gameContainer.classList.add('show');
+        }
     }
     
     if(url.includes('menu.html')) {
-        document.querySelector('.menu-container').classList.add('show');
+        const menuContainer = document.querySelector('.menu-container');
+        if (menuContainer) {
+            menuContainer.classList.add('show');
+        }
     }
 }

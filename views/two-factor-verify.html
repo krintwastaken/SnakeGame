@@ -14,8 +14,8 @@
         <h2>Подтверждение двухфакторной аутентификации</h2>
         <form id="twoFactorForm">
             <label for="twoFactorCode">Код 2FA:</label>
-            <input type="text" id="twoFactorCode" name="twoFactorCode" required>
-            <button type="submit">Подтвердить</button>
+            <input type="text" id="twoFactorCode" name="twoFactorCode" maxlength="6" required>
+            <button type="submit" class="menu-button">Подтвердить</button>
         </form>
     </div>
     <div class="notification-container"></div>

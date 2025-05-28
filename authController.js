@@ -120,7 +120,14 @@ class authController {
 
             const secret = speakeasy.generateSecret({ length: 20 });
 
-            QRCode.toDataURL(secret.otpauth_url, (err, data_url) => {
+            const otpauthUrl = speakeasy.otpauthURL({
+                secret: secret.base32,
+                label: encodeURIComponent(user.username),
+                issuer: "Snake Game",
+                encoding: 'base32'
+            });
+
+            QRCode.toDataURL(otpauthUrl, (err, data_url) => {
                 if (err) {
                     console.error(err);
                     return res.status(500).json({ message: 'Ошибка при генерации QR-кода' });
@@ -131,7 +138,6 @@ class authController {
                     qrCode: data_url
                 });
             });
-
         } catch (err) {
             console.error(err);
             res.status(500).json({ message: 'Ошибка при генерации секретного ключа 2FA' });

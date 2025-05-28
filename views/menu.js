@@ -1,4 +1,3 @@
-
 function navigateTo(url) {
     const transition = document.createElement('div');
     transition.className = 'page-transition';
@@ -59,11 +58,6 @@ function showShop() {
     const modal = document.getElementById('shop-modal');
     modal.style.display = 'flex';
     setTimeout(() => modal.classList.add('show'), 10);
-
-    const fruits = document.querySelectorAll('.fruit-option');
-    fruits.forEach((fruit, index) => {
-        fruit.style.transitionDelay = `${index * 0.1}s`;
-    });
 }
 
 async function showLeaders() {
@@ -159,8 +153,9 @@ function getMedalAltText(index) {
 }
 
 function exitGame() {
-    if (confirm('Вы действительно хотите выйти в меню авторизации?')) {
-        const menu = document.getElementById('menu');
+    localStorage.clear();
+
+    const menu = document.getElementById('menu');
         menu.classList.remove('show');
         menu.classList.add('hide');
 
@@ -172,7 +167,6 @@ function exitGame() {
             navigateTo("index.html");
             document.body.removeChild(transition);
         }, 900);
-    }
 }
 
 function closeModal(modalId) {
@@ -250,7 +244,28 @@ async function selectFruit(fruitType) {
     };
 }
 
-// Добавим функцию для перехода на страницу profile.html
 function showProfile() {
-    navigateTo("profile.html");
+    const playButton = document.getElementById('profile-button');
+    const errorElement = document.getElementById('error-message');
+
+    errorElement.style.display = 'none';
+    errorElement.textContent = '';
+
+    playButton.textContent = 'Загрузка...';
+    playButton.disabled = true;
+
+    fetch('profile.html')
+        .then(response => {
+            if (!response.ok) throw new Error('Страница не найдена');
+
+            document.getElementById('menu').classList.remove('show');
+            document.getElementById('menu').classList.add('hide');
+            setTimeout(() => navigateTo("profile.html"), 500);
+        })
+        .catch(error => {
+            errorElement.textContent = error.message;
+            errorElement.style.display = 'block';
+            playButton.textContent = 'Профиль';
+            playButton.disabled = false;
+        });
 }
