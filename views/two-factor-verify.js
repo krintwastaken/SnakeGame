@@ -56,18 +56,21 @@ document.addEventListener('DOMContentLoaded', () => {
         captchaModal.style.display = 'flex';
         captchaModal.classList.add('show');
         const recaptchaContainer = document.getElementById('recaptcha-container');
-        recaptchaContainer.innerHTML = '';
-        recaptchaContainer.classList.remove('show');
         captchaPassed = false;
+
+        // Рендерим капчу только если еще не рендерили
         if (typeof grecaptcha !== "undefined") {
-            grecaptcha.render('recaptcha-container', {
-                'sitekey': '6Lc3MkQrAAAAALTBKy0p3JadmFHlM_deHepkeJp3',
-                'callback': () => { 
-                    captchaPassed = true;
-                    recaptchaContainer.classList.add('show');
-                }
-            });
-            setTimeout(() => recaptchaContainer.classList.add('show'), 100);
+            if (recaptchaWidgetId === null) {
+                recaptchaWidgetId = grecaptcha.render('recaptcha-container', {
+                    'sitekey': '6Lc3MkQrAAAAALTBKy0p3JadmFHlM_deHepkeJp3',
+                    'callback': () => { 
+                        captchaPassed = true;
+                        recaptchaContainer.classList.add('show');
+                    }
+                });
+            } else {
+                grecaptcha.reset(recaptchaWidgetId);
+            }
         } else {
             showNotification('Ошибка загрузки капчи. Попробуйте обновить страницу.', 'error');
         }
