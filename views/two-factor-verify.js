@@ -133,7 +133,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (error) {
             failedAttempts++;
             if (failedAttempts >= MAX_ATTEMPTS) showCaptchaModal();
-            showNotification('Ошибка при подтверждении 2FA', 'error');
+            showNotification('Много неудачных попыток ввода. Попробуйте позже', 'error');
         }
     });
 });
