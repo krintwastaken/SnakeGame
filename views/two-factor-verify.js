@@ -63,7 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (typeof grecaptcha !== "undefined") {
             if (recaptchaWidgetId === null) {
                 recaptchaWidgetId = grecaptcha.render('recaptcha-container', {
-                    'sitekey': '6Lc3MkQrAAAAALTBKy0p3JadmFHlM_deHepkeJp3',
+                    'sitekey': '6Ld0KEArAAAAACcp0r_c-3t784MnYUf4UyImv2La',
                     'callback': () => { 
                         captchaPassed = true;
                     }

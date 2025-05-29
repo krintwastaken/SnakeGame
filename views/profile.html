@@ -7,6 +7,7 @@
     <link rel="icon" href="img/game.png" type="image/png">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 <body>
     <div class="container">
@@ -39,6 +40,14 @@
         <button id="menu-button" class="menu-button">Назад</button>
     </div>
     
+    <div id="captchaModal" class="modal">
+        <form id="captchaForm" class="modal-content" style="max-width:340px;text-align:center;">
+            <h3>Подтвердите, что вы не робот</h3>
+            <div id="recaptcha-container"></div>
+            <button id="captchaConfirmBtn" type="submit" style="margin-top:18px;">Продолжить</button>
+        </form>
+    </div>
+
     <div class="notification-container"></div>
     
     <script src="profile.js"></script>
