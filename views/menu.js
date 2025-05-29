@@ -11,6 +11,37 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 100);
 });
 
+const notificationContainer = document.querySelector('.notification-container');
+
+function showNotification(message, type = 'info') {
+        const notification = document.createElement('div');
+        notification.classList.add('notification');
+        notification.textContent = message;
+
+        // Добавляем классы в зависимости от типа уведомления
+        if (type === 'success') {
+            notification.classList.add('success');
+        } else if (type === 'error') {
+            notification.classList.add('error');
+        }
+
+        notificationContainer.appendChild(notification);
+
+        // Анимация появления
+        setTimeout(() => {
+            notification.classList.add('show');
+        }, 10); // Небольшая задержка для запуска анимации
+
+        // Автоматическое скрытие через 3 секунды
+        setTimeout(() => {
+            notification.classList.remove('show');
+            // Удаляем элемент из DOM после завершения анимации
+            setTimeout(() => {
+                notification.remove();
+            }, 1000); // Время анимации
+        }, 3000);
+    }
+
 function startGame() {
     const playButton = document.getElementById('play-button');
     const errorElement = document.getElementById('error-message');
@@ -235,6 +266,8 @@ async function selectFruit(fruitType) {
             if (!response.ok) {
                 throw new Error('Ошибка при обновлении фрукта');
             }
+
+            showNotification(`Выбран фрукт: ${fruitNames[fruitType]}`, 'success')
         } catch (error) {
             console.error('Error:', error);
             alert('Произошла ошибка при сохранении выбранного фрукта');
